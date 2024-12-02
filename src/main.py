@@ -13,12 +13,14 @@ def CreateResponse(Input: str, URL: str):
                           "Content-Type": "application/json"})
 
     # Split the response by newlines and filter out empty lines
-    response_lines = [line for line in response.text.strip().split('\n') if line]
+    response_lines = [
+        line for line in response.text.strip().split('\n') if line]
 
     # Parse each line as JSON
     response_dicts = [json.loads(line) for line in response_lines]
 
-    print(''.join(response_dict.get('response', '') for response_dict in response_dicts))
+    print(''.join(response_dict.get('response', '')
+          for response_dict in response_dicts))
 
 
 def CallAPI():
