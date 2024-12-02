@@ -26,8 +26,8 @@ def CreateResponse(Input: str, URL: str):
 def CallAPI():
     print(os.getenv("URL"))
     CreateResponse(
-    "Tell me that you are an assistent and want to help me!",
-    os.getenv("URL"))
+        "Tell me that you are an assistent and want to help me!",
+        os.getenv("URL"))
     Input = input()
     CreateResponse(Input, os.getenv("URL"))
     CallAPI()
