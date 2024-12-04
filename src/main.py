@@ -7,7 +7,7 @@ class AIAssistent():
 
     def __init__(self, ModelName):
         self.ModelName = ModelName
-        self.Prompt  = any
+        self.Prompt = any
         self.Chain = any
         self.Context = ""
         self.Template = """
@@ -30,7 +30,8 @@ class AIAssistent():
             UserInput = input("You: ")
             if UserInput.lower() == "exit":
                 break
-            Result = self.Chain.invoke({"context": self.Context, "question": UserInput})
+            Result = self.Chain.invoke({"context": self.Context,
+            "question": UserInput})
             print("AI Assistent: ", Result)
             self.Context += f"\nUser: {UserInput}\nAI Assistent: {Result}"
 
@@ -38,6 +39,7 @@ class AIAssistent():
         """Method for calling all other methods."""
         self.CreateModel()
         self.RunConversation()
+
 
 if __name__ == "__main__":
     load_dotenv(".env")
