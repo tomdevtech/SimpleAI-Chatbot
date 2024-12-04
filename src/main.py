@@ -9,8 +9,7 @@ Template = """
     accurate as possible.
 
     That`s the current conversation history: {context}
-    Answer this question: {question}
-    """
+    Answer this question: {question}"""
 
 
 # Variable Declaration of the AI Model & Chaining
