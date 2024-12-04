@@ -1,10 +1,11 @@
 """This file runs the ai model and lets you interact with it."""
+
 from dotenv import load_dotenv
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 
 
-class AIAssistent():
+class AIAssistent:
     """AI Assistent Class."""
 
     def __init__(self, ModelName):
@@ -29,12 +30,11 @@ class AIAssistent():
     def RunConversation(self):
         """Run the AI model."""
         print("Welcome to the AI Assistent! Type 'exit' to quit the program.")
-        while (True):
+        while True:
             UserInput = input("You: ")
             if UserInput.lower() == "exit":
                 break
-            Result = self.Chain.invoke({"context": self.Context,
-                                        "question": UserInput})
+            Result = self.Chain.invoke({"context": self.Context, "question": UserInput})
             print("AI Assistent: ", Result)
             self.Context += f"\nUser: {UserInput}\nAI Assistent: {Result}"
 
