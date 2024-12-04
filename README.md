@@ -1,6 +1,6 @@
 # SimpleAI-API-GPT
 ## News
-
+- Added basic pipelines for code secrurity checks.
 > This project will be updated as continuously as possible.
 
 ## Summary
