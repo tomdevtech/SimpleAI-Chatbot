@@ -81,7 +81,10 @@ jobs:
       - name: Check Python Code Formatting
         run: |
           black --check .
-
+      
+      - name: Sort Imports with isort
+        run: |
+          isort .
       - name: Import Sorting Check with isort
         run: isort --check-only .
 
