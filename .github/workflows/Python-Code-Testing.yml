@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  Check:
+  General-Syntax-Check:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,7 @@ jobs:
       - name: Lint with flake8
         run: flake8 .
         
-  quality-checks:
+  Code-Quality-Check:
     runs-on: ubuntu-latest
 
     steps:
@@ -52,10 +52,7 @@ jobs:
       - name: Install tools
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 bandit safety vulture radon pydocstyle black isort mypy
-
-      - name: Syntax and Style Check with flake8
-        run: flake8 .
+          pip install bandit safety vulture radon pydocstyle black isort mypy
 
       - name: Security Check with Bandit
         run: bandit -r .

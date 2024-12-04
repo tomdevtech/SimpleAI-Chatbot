@@ -39,7 +39,8 @@ class AIAssistent():
             self.Context += f"\nUser: {UserInput}\nAI Assistent: {Result}"
 
     def Main(self):
-        """Executes all other methods and gets called by the start of the file."""
+        """Executes all other methods and gets called 
+        by the start of the file."""
         self.CreateModel()
         self.RunConversation()
 
