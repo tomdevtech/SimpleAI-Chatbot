@@ -1,10 +1,9 @@
-name: Syntax Check
+name: Python Syntax Check
 
 on:
   push:
     branches:
       - main
-      - develop
   pull_request:
 
 jobs:
