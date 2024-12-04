@@ -27,7 +27,7 @@ class AIAssistent():
         self.Chain = self.Prompt | self.Model
 
     def RunConversation(self):
-        """Runs the AI."""
+        """Run the AI"""
         print("Welcome to the AI Assistent! Type 'exit' to quit the program.")
         while (True):
             UserInput = input("You: ")
@@ -39,8 +39,7 @@ class AIAssistent():
             self.Context += f"\nUser: {UserInput}\nAI Assistent: {Result}"
 
     def Main(self):
-        """Executes all other methods and gets called 
-        by the start of the file."""
+        """Execute all methods."""
         self.CreateModel()
         self.RunConversation()
 
