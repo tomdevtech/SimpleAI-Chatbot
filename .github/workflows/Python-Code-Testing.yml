@@ -1,14 +1,42 @@
-name: Python Quality Assurance
+name: Python Syntax Check
 
 on:
   push:
     branches:
       - main
-  pull_request:
+  pull_request: 
     branches:
       - main
 
 jobs:
+  Check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # Install dependencies for flake8 (optional step if you want code style checking)
+      - name: Install flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      # Step 1: Basic Syntax Check
+      - name: Syntax Check with Python
+        run: python -m compileall .
+
+      # Step 2: Code Style Check with flake8
+      - name: Lint with flake8
+        run: flake8 .
+        
   quality-checks:
     runs-on: ubuntu-latest
 
@@ -33,7 +61,12 @@ jobs:
         run: bandit -r .
 
       - name: Dependency Security Check
-        run: safety check -r requirements.txt
+        run: |
+          if [ -f requirements.txt ]; then
+            safety check -r requirements.txt
+          else
+            echo "No requirements.txt file found. Skipping dependency security check."
+          fi
 
       - name: Dead Code Detection with Vulture
         run: vulture .
