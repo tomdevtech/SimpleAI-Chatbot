@@ -52,7 +52,7 @@ jobs:
       - name: Install tools
         run: |
           python -m pip install --upgrade pip
-          pip install bandit safety vulture radon pydocstyle black isort mypy
+          pip install bandit safety vulture radon pydocstyle black isort pyre-check
 
       - name: Security Check with Bandit
         run: bandit -r .
@@ -88,5 +88,12 @@ jobs:
       - name: Import Sorting Check with isort
         run: isort --check-only .
 
-      - name: Type Checking with MyPy
-        run: mypy .
+      - name: Type Checking with Pyright
+        run: |
+          npm install -g pyright
+          pyright src/
+        
+      - name: Type Checking with Pyre
+        run: |
+          pyre init
+          pyre check
