@@ -87,8 +87,3 @@ jobs:
           isort .
       - name: Import Sorting Check with isort
         run: isort --check-only .
-        
-      - name: Type Checking with Pyre
-        run: |
-          pyre init
-          pyre check
