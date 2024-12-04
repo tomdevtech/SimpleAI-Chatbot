@@ -4,8 +4,10 @@ from langchain_core.prompts import ChatPromptTemplate
 
 
 class AIAssistent():
+    """AI Assistent Class."""
 
     def __init__(self, ModelName):
+        """Initilization Process."""
         self.ModelName = ModelName
         self.Prompt = any
         self.Chain = any
