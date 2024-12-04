@@ -17,13 +17,11 @@ class AIAssistent():
     That`s the current conversation history: {context}
     Answer this question: {question}"""
 
-
     def CreateModel(self):
         """Creation of the AI model with given specifications."""
         self.Model = OllamaLLM(model=self.ModelName)
         self.Prompt = ChatPromptTemplate.from_template(self.Template)
         self.Chain = self.Prompt | self.Model
-
 
     def RunConversation(self):
         """Method for running the AI."""
@@ -36,12 +34,10 @@ class AIAssistent():
             print("AI Assistent: ", Result)
             self.Context += f"\nUser: {UserInput}\nAI Assistent: {Result}"
 
-
     def Main(self):
         """Method for calling all other methods."""
         self.CreateModel()
         self.RunConversation()
-
 
 if __name__ == "__main__":
     load_dotenv(".env")
