@@ -74,8 +74,13 @@ jobs:
       - name: Documentation Check with pydocstyle
         run: pydocstyle .
 
-      - name: Code Formatting Check with Black
-        run: black --check .
+      - name: Format Python Code
+        run: |
+          black .
+      
+      - name: Check Python Code Formatting
+        run: |
+          black --check .
 
       - name: Import Sorting Check with isort
         run: isort --check-only .
