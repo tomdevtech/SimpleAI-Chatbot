@@ -5,7 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 # Template Definition for the AI Model
 Template = """
-    You are a smart programming and planning assistent and 
+    You are a smart programming and planning assistent and
     help to build projects. Answer the question below as
     accurate as possible.
     That`s the current conversation history: {context}
