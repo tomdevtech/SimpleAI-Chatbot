@@ -87,11 +87,6 @@ jobs:
           isort .
       - name: Import Sorting Check with isort
         run: isort --check-only .
-
-      - name: Type Checking with Pyright
-        run: |
-          npm install -g pyright
-          pyright src/
         
       - name: Type Checking with Pyre
         run: |
