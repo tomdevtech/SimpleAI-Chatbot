@@ -27,7 +27,7 @@ class AIAssistent():
         self.Chain = self.Prompt | self.Model
 
     def RunConversation(self):
-        """Run the Model"""
+        """Run the AI model."""
         print("Welcome to the AI Assistent! Type 'exit' to quit the program.")
         while (True):
             UserInput = input("You: ")
