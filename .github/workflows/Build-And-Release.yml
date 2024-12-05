@@ -27,18 +27,18 @@ jobs:
       # Build the Exe with PyInstaller
       - name: Build Exe
         run: |
-          pyinstaller --onefile src/main.py --name main_Executable
+          pyinstaller --onefile src/main.py --name AIChatBot
           ls dist/  # Überprüfen, ob die Datei erstellt wurde
 
       # Create a GitHub Release and Upload the Exe
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: dist/main_Executable.Exe
+          artifacts: dist/AIChatBot.Exe
           token: ${{ secrets.Token}}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
             This release contains the compiled Python Executable.
-            - **File:** `main_Executable.Exe`
+            - **File:** `AIChatBot.exe`
           replacesArtifacts: true 
