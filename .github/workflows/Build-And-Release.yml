@@ -2,9 +2,6 @@ name: Build and Release Exe
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "V*"
 
 jobs:
   build-and-release:
