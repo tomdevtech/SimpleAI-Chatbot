@@ -3,7 +3,7 @@ name: Build and Release EXE
 on:
   push:
     tags:
-      - "v0.1"
+      - "v*"
   workflow_dispatch: # Manual Execution
 
 jobs:
