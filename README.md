@@ -1,4 +1,4 @@
-# SimpleAI-API-GPT
+# SimpleAI-Chatbot
 ## News
 - Added basic pipelines for code secrurity checks.
 > This project will be updated as continuously as possible.
