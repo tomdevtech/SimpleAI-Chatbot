@@ -35,7 +35,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: dist/main_Executable.Exe
-          token: ${{ secrets.GITHUB_TOKEN}}
+          token: ${{ secrets.Token}}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
