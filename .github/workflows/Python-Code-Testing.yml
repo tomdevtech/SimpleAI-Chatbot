@@ -1,0 +1,89 @@
+name: Python Syntax Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: 
+    branches:
+      - main
+
+jobs:
+  General-Syntax-Check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # Install dependencies for flake8 (optional step if you want code style checking)
+      - name: Install flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      # Step 1: Basic Syntax Check
+      - name: Syntax Check with Python
+        run: python -m compileall .
+
+      # Step 2: Code Style Check with flake8
+      - name: Lint with flake8
+        run: flake8 .
+        
+  Code-Quality-Check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety vulture radon pydocstyle black isort pyre-check
+
+      - name: Security Check with Bandit
+        run: bandit -r .
+
+      - name: Dependency Security Check
+        run: |
+          if [ -f requirements.txt ]; then
+            safety check -r requirements.txt
+          else
+            echo "No requirements.txt file found. Skipping dependency security check."
+          fi
+
+      - name: Dead Code Detection with Vulture
+        run: vulture .
+
+      - name: Code Complexity Check with Radon
+        run: radon cc . -a
+
+      - name: Documentation Check with pydocstyle
+        run: pydocstyle .
+
+      - name: Format Python Code
+        run: |
+          black .
+      
+      - name: Check Python Code Formatting
+        run: |
+          black --check .
+      
+      - name: Sort Imports with isort
+        run: |
+          isort .
+      - name: Import Sorting Check with isort
+        run: isort --check-only .
