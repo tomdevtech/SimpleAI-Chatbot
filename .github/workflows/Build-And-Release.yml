@@ -1,10 +1,7 @@
 name: Build and Release EXE
 
 on:
-  push:
-    tags:
-      - "v*"
-  workflow_dispatch: # Manual Execution
+  workflow_dispatch:
 
 jobs:
   build:
@@ -31,7 +28,6 @@ jobs:
       - name: Build EXE with PyInstaller
         run: |
           pyinstaller --onefile src/main.py --name main_executable
-        # Die ausführbare Datei wird in "dist/main_executable.exe" erstellt
 
       # Upload the EXE as an artifact
       - name: Upload EXE Artifact
