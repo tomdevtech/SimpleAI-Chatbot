@@ -1,10 +1,7 @@
-name: Build and Release EXE
+name: Build and Release Exe
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "V*"
 
 jobs:
   build-and-release:
@@ -27,8 +24,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller
 
-      # Build the EXE with PyInstaller
-      - name: Build EXE
+      # Build the Exe with PyInstaller
+      - name: Build Exe
         run: |
           pyinstaller --onefile src/main.py --name main_executable
           ls dist/ 
