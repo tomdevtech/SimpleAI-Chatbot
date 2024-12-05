@@ -1,10 +1,13 @@
-name: Build and Release EXE
+name: Build and Release Exe
 
 on:
   workflow_dispatch:
-    
+  push:
+    tags:
+      - "V*"
+
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,43 +21,26 @@ jobs:
         with:
           python-version: 3.11
 
-      # Install pyinstaller
+      # Install PyInstaller
       - name: Install PyInstaller
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller
 
-      # Build the EXE
-      - name: Build EXE with PyInstaller
+      # Build the Exe with PyInstaller
+      - name: Build Exe
         run: |
           pyinstaller --onefile src/main.py --name main_executable
+          ls dist/ 
 
-      # Upload the EXE as an artifact
-      - name: Upload EXE Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: main_executable
-          path: dist/main_executable.exe
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      # Download the EXE Artifact
-      - name: Download EXE Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: main_executable
-
-      # Create Release and Upload EXE
-      - name: Create Release and Upload EXE
+      # Create a GitHub Release and Upload the EXE
+      - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: main_executable.exe
+          artifacts: dist/main_executable.exe
           token: ${{ secrets.TOKEN }}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
-            This release contains the compiled EXE for the application.
+            This release contains the compiled executable for the application.
             - **File:** `main_executable.exe`
