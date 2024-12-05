@@ -1,11 +1,11 @@
-name: Build and Release Exe
+name: Build and Release Python Exe
 
 on:
   workflow_dispatch:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest 
 
     steps:
       # Check out the repository
@@ -27,17 +27,18 @@ jobs:
       # Build the Exe with PyInstaller
       - name: Build Exe
         run: |
-          pyinstaller --onefile src/main.py --name main_executable
-          ls dist/ 
+          pyinstaller --onefile src/main.py --name AIChatBot
+          ls dist/  # Überprüfen, ob die Datei erstellt wurde
 
-      # Create a GitHub Release and Upload the EXE
+      # Create a GitHub Release and Upload the Exe
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: dist/main_executable.exe
-          token: ${{ secrets.TOKEN }}
+          artifacts: dist/AIChatBot.Exe
+          token: ${{ secrets.Token}}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
-            This release contains the compiled executable for the application.
-            - **File:** `main_executable.exe`
+            This release contains the compiled Python Executable.
+            - **File:** `AIChatBot.exe`
+          replacesArtifacts: true 
