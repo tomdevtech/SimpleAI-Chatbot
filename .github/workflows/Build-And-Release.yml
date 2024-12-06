@@ -2,9 +2,13 @@ name: Build and Release Python Exe
 
 on:
   workflow_dispatch:
+  create:
+    branches:
+      - "release/V.*"
 
 jobs:
   build-and-release:
+    if: startsWith(github.ref, 'refs/heads/release/')
     runs-on: windows-latest 
 
     steps:
