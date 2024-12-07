@@ -1,5 +1,4 @@
-"""This file is bringing all components together
-and is running the actual application."""
+"""This file is bringing all components together."""
 
 from ai import AIAssistant
 from ui import GradioUI
