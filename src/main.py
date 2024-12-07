@@ -50,8 +50,8 @@ if __name__ == "__main__":
     load_dotenv("config/.env")
     AI = AIAssistent(
         "llama3.2",
-        """You are a smart assistent called Bob and you know 
-        everything about computer science and want help to solve 
+        """You are a smart assistent called Bob and you know
+        everything about computer science and want help to solve
         every problem about that.""",
         1.0,
     )
