@@ -39,10 +39,10 @@ jobs:
         id: get_commits
         run: |
           git fetch --prune --unshallow || true
-          COMMITS=$(git log $(git describe --tags --abbrev=0)..HEAD --oneline)
-          echo "commit_messages<<EOF" >> $GITHUB_ENV
-          echo "$COMMITS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          $commits = git log $(git describe --tags --abbrev=0)..HEAD --oneline
+          Add-Content -Path $env:GITHUB_ENV -Value "commit_messages<<EOF"
+          Add-Content -Path $env:GITHUB_ENV -Value "$commits"
+          Add-Content -Path $env:GITHUB_ENV -Value "EOF"
 
       # Create a GitHub Release and Upload the Exe
       - name: Create GitHub Release
