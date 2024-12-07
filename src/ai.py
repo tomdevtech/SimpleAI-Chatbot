@@ -9,7 +9,6 @@ class AIAssistant:
 
     def __init__(self, ModelName, ModelFile, Temperature):
         """Initialize Process."""
-        
         self.ModelName = ModelName
         self.ModelFile = ModelFile
         self.Temperature = Temperature
