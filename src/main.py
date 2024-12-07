@@ -37,7 +37,8 @@ class AIAssistent:
             UserInput = input("You: ")
             if UserInput.lower() == "exit":
                 break
-            Result = self.Chain.invoke({"context": self.Context, "question": UserInput})
+            Result = self.Chain.invoke({"context": self.Context, 
+                                        "question": UserInput})
             print("AI Assistent: ", Result)
             self.Context += f"\nUser: {UserInput}\nAI Assistent: {Result}"
 
