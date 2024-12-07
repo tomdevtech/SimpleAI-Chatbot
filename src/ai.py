@@ -8,7 +8,7 @@ class AIAssistant:
     """AI Assistent Class."""
 
     def __init__(self, ModelName, ModelFile, Temperature):
-        """Initialization Process."""
+        """Initialize Process."""
         self.ModelName = ModelName
         self.ModelFile = ModelFile
         self.Temperature = Temperature

@@ -8,7 +8,7 @@ class StreamlitUI:
     """Class for managing the Streamlit user interface."""
 
     def __init__(self, AIAssistant: AIAssistant):
-        """Initialization."""
+        """Initialize Process."""
         self.AIAssistant = AIAssistant
         self.ChatHistory = ""
 
