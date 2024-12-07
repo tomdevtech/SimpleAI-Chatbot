@@ -11,7 +11,7 @@ class MainApp:
         """Initialize the application."""
         self.AIAssistant = AIAssistant(
             "llama3.2",
-            """You are a smart assistant called Bob and you know everything 
+            """You are a smart assistant called Bob and you know everything
             about computer science.""",
             1.0
         )

@@ -26,7 +26,8 @@ class AIAssistant:
 
     def CreateModel(self):
         """Creation of the AI model with given specifications."""
-        self.Model = OllamaLLM(model=self.ModelName, temperature=self.Temperature)
+        self.Model = OllamaLLM(model=self.ModelName, 
+                               temperature=self.Temperature)
         self.Prompt = ChatPromptTemplate.from_template(self.Template)
         self.Chain = self.Prompt | self.Model
 
