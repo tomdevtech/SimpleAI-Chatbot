@@ -3,11 +3,13 @@
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 
+
 class AIAssistant:
     """AI Assistent Class."""
 
     def __init__(self, ModelName, ModelFile, Temperature):
-        """Initialization Process."""
+        """Initialize Process."""
+        
         self.ModelName = ModelName
         self.ModelFile = ModelFile
         self.Temperature = Temperature
@@ -25,12 +27,15 @@ class AIAssistant:
 
     def CreateModel(self):
         """Creation of the AI model with given specifications."""
-        self.Model = OllamaLLM(model=self.ModelName, temperature=self.Temperature)
+        self.Model = OllamaLLM(model=self.ModelName,
+                               temperature=self.Temperature)
         self.Prompt = ChatPromptTemplate.from_template(self.Template)
         self.Chain = self.Prompt | self.Model
 
     def GetResponse(self, UserInput):
         """Get AI response for user input."""
-        self.Result = self.Chain.invoke({"context": self.Context, "question": UserInput})
+        self.Result = self.Chain.invoke(
+            {"context": self.Context, "question": UserInput}
+        )
         self.Context += f"\nUser: {UserInput}\nAI Assistent: {self.Result}"
         return self.Result
