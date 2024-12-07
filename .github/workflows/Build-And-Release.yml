@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   create:
     branches:
-      - "release/V.*"
+      - "release/V*"
 
 jobs:
   build-and-release:
@@ -32,17 +32,30 @@ jobs:
       - name: Build Exe
         run: |
           pyinstaller --onefile src/main.py --name AIChatBot
-          ls dist/  # Überprüfen, ob die Datei erstellt wurde
+          ls dist/
+
+      # Collect commits since last release
+      - name: Collect Commit Messages
+        id: get_commits
+        run: |
+          git fetch --prune --unshallow || true
+          COMMITS=$(git log $(git describe --tags --abbrev=0)..HEAD --oneline)
+          echo "commit_messages<<EOF" >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Create a GitHub Release and Upload the Exe
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: dist/AIChatBot.Exe
-          token: ${{ secrets.Token}}
+          artifacts: dist/AIChatBot.exe
+          token: ${{ secrets.Token }}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
             This release contains the compiled Python Executable.
             - **File:** `AIChatBot.exe`
-          replacesArtifacts: true 
+
+            Commits included in this release:
+            ${{ env.commit_messages }}
+          replacesArtifacts: true
