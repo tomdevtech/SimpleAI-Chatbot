@@ -14,5 +14,7 @@ timeline
     V0.1 : Basic script for AI chatbot
     V0.2 : Upgraded script for AI chatbot (extended usability)
     V0.3 : Further upgraded script with class approach
-    In Development : Extended usability with reading the modelfile and specializing the AI. Furthermore scanning the local repo for creating a markdown with all of the code documented.
+    In Development : Extended usability with reading the modelfile and specializing the AI
+                   : Furthermore scanning the local repo for creating a markdown with all of the code documented
+                   : Updating the pipelines and adding more functionality
 
