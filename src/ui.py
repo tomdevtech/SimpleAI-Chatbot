@@ -1,29 +1,43 @@
 """This file provides the UI for the AI model."""
 
 from ai import AIAssistant
-import streamlit as st
+import gradio as gr
 
 
-class StreamlitUI:
-    """Class for managing the Streamlit user interface."""
+class GradioUI:
+    """Class for managing Gradio-based user interface."""
 
     def __init__(self, AIAssistant: AIAssistant):
-        """Initialize Process."""
+        """Initialize Gradio UI with an AI Assistant instance."""
         self.AIAssistant = AIAssistant
-        self.ChatHistory = ""
 
-    def Run(self):
-        """Run the Streamlit UI."""
-        st.title("AI Assistant")
-        st.write("Ask Bob everything!")
+    def Chat(self, UserInput):
+        """
+        Handle user input and return AI response.
 
-        # User Input
-        UserInput = st.text_input("Your question:")
-        if st.button("Send Question"):
-            if UserInput:
-                Response = self.AIAssistant.GetResponse(UserInput)
-                self.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
-                st.write(Response)
+        Args:
+            UserInput (str): User's input question.
 
-        # Show Conversation History
-        st.text_area("Chat History", self.ChatHistory, height=300)
+        Returns:
+            str: AI's response.
+        """
+        return self.AIAssistant.GetResponse(UserInput)
+
+    def BuildInterface(self):
+        """
+        Build the Gradio interface.
+
+        Returns:
+            gr.Interface: Configured Gradio interface.
+        """
+        return gr.Interface(
+            fn=self.Chat,
+            inputs="text",
+            outputs="text",
+            title="AI Assistant",
+            description="Ask Bob everything!",
+        )
+
+    def Launch(self):
+        """Launch the Gradio app."""
+        self.BuildInterface().launch()
