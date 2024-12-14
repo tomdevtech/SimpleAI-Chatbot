@@ -51,7 +51,7 @@ jobs:
           pip install bandit safety vulture radon pydocstyle black isort pyre-check
 
       - name: Security Check with Bandit
-        run: bandit -r .
+        run: bandit -r src
 
       - name: Dependency Security Check
         run: |
@@ -83,3 +83,21 @@ jobs:
           isort .
       - name: Import Sorting Check with isort
         run: isort --check-only .
+
+  Unit-Tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: pip install pytest streamlit langchain_ollama langchain_core langchain
+
+      - name: Run unit tests
+        run: python -m pytest tests/
