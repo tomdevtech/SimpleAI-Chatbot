@@ -21,4 +21,3 @@ timeline
     V1.0 : Will be released soon (Includes RAG and automatic documentation creation for your repo)
     In Development : Furthermore scanning the local repo for creating a markdown with all of the code documented
                    : Updating the pipelines and adding more functionality
-
