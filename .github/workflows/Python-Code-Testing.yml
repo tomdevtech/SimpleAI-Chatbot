@@ -1,8 +1,10 @@
 name: Python Syntax Check
 
 on:
-  deployment:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   General-Syntax-Check:
