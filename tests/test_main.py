@@ -5,7 +5,8 @@ from src.main import MainApp
 
 
 class TestMainApp:
-    """Test class for testing the current application for any errors or bugs."""
+    """Test class for testing the current application for any 
+    errors or bugs."""
 
     """Value Section."""
 
