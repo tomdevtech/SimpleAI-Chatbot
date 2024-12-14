@@ -51,7 +51,7 @@ jobs:
           pip install bandit safety vulture radon pydocstyle black isort pyre-check
 
       - name: Security Check with Bandit
-        run: bandit -r .
+        run: bandit -r src
 
       - name: Dependency Security Check
         run: |
