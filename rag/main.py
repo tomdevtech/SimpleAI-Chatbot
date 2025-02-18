@@ -25,3 +25,17 @@ class AutoRepoAnalyzer:
     def get_reponse_status(self):
         """Method to get the response from the system for creating a summarize file."""
         return self.status
+    
+    def write_summary(self, content: str):
+        """Method to write the summary of the repository to a markdown file."""
+        with open("ProjectSummary.md", "w") as f:
+            f.write(content)
+
+    def create_model(self):
+        """Method to create a model for the auto analyzer tool."""
+        pass
+
+    def start_model(self):
+        """Method to start the model for creating a summarize file."""
+        self.create_model()
+            
