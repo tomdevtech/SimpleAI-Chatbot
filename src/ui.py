@@ -11,17 +11,28 @@ class StreamlitUI:
         """Initialize Process."""
         self.AIAssistant = AIAssistant
         self.ChatHistory = ""
+        self.RepoPath = ""
 
     def Run(self):
         """Run the Streamlit UI."""
         st.title("AI Assistant")
-        st.write("Ask Bob everything!")
+        st.write("Welcome to the AI Repo Summarizer!\nPlease enter the repository path first!")
+
+         # Path Input
+        self.RepoPath = st.text_input("Set Repository Path:", self.RepoPath)
+        if st.button("Set Path"):
+            if self.RepoPath:
+                st.write(f"Repository path set to: {self.RepoPath}")
+                self.AIAssistant.SetRepoPath(self.ChatHistory)
+                st.write("Analyzing repository...")
+                result = self.AIAssistant.AnalyzeRepository()
+                st.write(result)
 
         # User Input
         UserInput = st.text_input("Your question:")
         if st.button("Send Question"):
             if UserInput:
-                Response = self.AIAssistant.GetResponse(UserInput)
+                Response = self.AIAssistant.AskQuestion(UserInput)
                 self.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
                 st.write(Response)
 

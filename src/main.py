@@ -10,9 +10,7 @@ class MainApp:
     def __init__(self):
         """Initialize the application."""
         self.AIAssistant = AIAssistant(
-            "llama3.2",
-            """You are a smart assistant called Bob and you know everything
-            about computer science.""",
+            "llama3.1:8b",
             1.0
         )
         self.UI = StreamlitUI(self.AIAssistant)
