@@ -27,7 +27,8 @@ class AIAssistant:
         self.model_name = model_name
         self.temperature = temperature
         self.file_types = (
-            file_types if file_types else [".py", ".js", ".java", ".md", ".txt"]
+            file_types if file_types else [".py", ".js", ".java",
+                                           ".md", ".txt"]
         )
         self.vector_store = None
         self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
@@ -55,7 +56,8 @@ class AIAssistant:
 
         default_summary_prompt = """
         You are a technical documentation assistant.
-        Summarize the provided repository contents in a clear and concise manner.
+        Summarize the provided repository contents 
+        in a clear and concise manner.
         Repository Contents:
         {Context}
         Provide a structured summary highlighting key points,
@@ -128,7 +130,8 @@ class AIAssistant:
                             errors="ignore",
                         ) as f:
                             content = f.read()
-                            docs.append({"Path": file_path, "Content": content})
+                            docs.append({"Path": file_path,
+                                         "Content": content})
                     except Exception as e:
                         print(f"Failed to read {file_path}: {e}")
         return docs
@@ -206,4 +209,3 @@ class AIAssistant:
             print("Summary written to RepoSummary.md")
         except Exception as e:
             print(f"Failed to write summary: {e}")
-            
