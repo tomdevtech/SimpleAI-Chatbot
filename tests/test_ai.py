@@ -10,7 +10,8 @@ class TestAI:
     """Value Section."""
 
     @pytest.mark.parametrize(
-        "ModelName, Creativity, Prompt, SummaryPrompt, FileTypes, expected_AIAssistant",
+        """ModelName, Creativity, Prompt, SummaryPrompt, FileTypes,
+        expected_AIAssistant""",
         [
             (
                 "llama3.1:8b",
