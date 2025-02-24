@@ -1,5 +1,6 @@
 """
-This file provides the AI model and its functionalities for repository code analysis and Q&A.
+This file provides the AI model and its functionalities 
+for repository code analysis and Q&A.
 
 This module defines the `AIAssistant` class, which facilitates
 code repository analysis, contextual querying, and documentation generation.
@@ -37,7 +38,7 @@ class AIAssistant:
             Temperature (float): The temperature setting for model responses.
             PromptTemplate (str): Template for user prompts.
             SummaryPromptTemplate (str): Template for generating summaries.
-            FileTypes (list, optional): List of file types 
+            FileTypes (list, optional): List of file types
             to include in analysis.
         """
         self.RepoPath = None
@@ -175,7 +176,7 @@ class AIAssistant:
                 if any(File.endswith(FileType) for FileType in self.FileTypes):
                     FilePath = os.path.join(Root, File)
                     try:
-                        with open(FilePath, "r", encoding="utf-8", 
+                        with open(FilePath, "r", encoding="utf-8",
                                   errors="ignore") as F:
                             Content = F.read()
                             Docs.append({"Path": FilePath, "Content": Content})
