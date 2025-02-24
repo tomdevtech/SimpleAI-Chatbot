@@ -1,4 +1,5 @@
-"""This file provides the AI model and all of its functionalities for repository code ananalysis and Q&A."""
+"""This file provides the AI model and all of its 
+functionalities for repository code ananalysis and Q&A."""
 
 import os
 import subprocess
@@ -29,7 +30,8 @@ class AIAssistant:
         )
         self.VectorStore = None
         self.Embeddings = OllamaEmbeddings(model="nomic-embed-text")
-        self.Assistant = OllamaLLM(model=self.ModelName, temperature=self.Temperature)
+        self.Assistant = OllamaLLM(model=self.ModelName,
+                                   temperature=self.Temperature)
         self.Context = ""
         self.SummaryCompleted = False
 
