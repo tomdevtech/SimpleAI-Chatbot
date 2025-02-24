@@ -45,13 +45,10 @@ class AIAssistant:
                 """
             You are an expert code reviewer. Answer the following question
             based on the provided repository context:
-            
             Context:
             {Context}
-            
             Question:
             {Question}
-            
             Please provide a concise and clear answer.
             """
             )
@@ -64,10 +61,8 @@ class AIAssistant:
                 """
             You are a technical documentation assistant. 
             Summarize the provided repository contents in a clear and concise manner.
-        
             Repository Contents:
             {Context}
-            
             Provide a structured summary highlighting key points, 
             code structure, and any important observations.
             """
@@ -100,7 +95,7 @@ class AIAssistant:
             print("Ollama server started successfully.")
         except FileNotFoundError:
             print(
-                """Ollama is not installed. Please install 
+                """Ollama is not installed. Please install
                 Ollama using 'brew install ollama'
                 or appropriate for your OS."""
             )
@@ -109,7 +104,8 @@ class AIAssistant:
     def CheckAndPullModel(self, ModelName):
         """Check if a specific model exists and pull if not."""
         try:
-            result = subprocess.run(["ollama", "list"], capture_output=True, text=True)
+            result = subprocess.run(["ollama", "list"], 
+            capture_output=True, text=True)
             if ModelName not in result.stdout:
                 print(f"Model '{ModelName}' not found. Downloading...")
                 subprocess.run(["ollama", "pull", ModelName])
@@ -140,8 +136,10 @@ class AIAssistant:
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000, chunk_overlap=100
         )
-        splits = text_splitter.create_documents([doc["Content"] for doc in docs])
-        self.VectorStore = Chroma.from_documents(splits, embedding=self.Embeddings)
+        splits = text_splitter.create_documents(
+        [doc["Content"] for doc in docs])
+        self.VectorStore = Chroma.from_documents(splits, 
+        embedding=self.Embeddings)
         print("Vector store created successfully.")
 
     def AnalyzeRepository(self):
