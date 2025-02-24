@@ -21,6 +21,7 @@ class TestUI:
                 "This is a summary test prompt.",
                 [".py", ".js", ".java", ".md", ".txt"],
             ),
+            True,
         ],
     )
     def test_UI(

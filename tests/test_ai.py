@@ -19,6 +19,7 @@ class TestAI:
                 "This is a test prompt.",
                 "This is a summary test prompt.",
                 [".py", ".js", ".java", ".md", ".txt"],
+                True,
             ),
         ],
     )
