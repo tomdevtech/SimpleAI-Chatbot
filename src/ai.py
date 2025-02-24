@@ -56,7 +56,7 @@ class AIAssistant:
 
         default_summary_prompt = """
         You are a technical documentation assistant.
-        Summarize the provided repository contents 
+        Summarize the provided repository contents
         in a clear and concise manner.
         Repository Contents:
         {Context}
