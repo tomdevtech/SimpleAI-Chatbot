@@ -112,14 +112,14 @@ class AIAssistant:
                 capture_output=True,
                 text=True,
                 shell=False
-                )  # nosec B607
+            )  # nosec B607
             if model_name not in result.stdout:
                 print(f"Model '{model_name}' not found. Downloading...")
                 subprocess.run(["ollama", "pull", model_name],
-                capture_output=True,
-                text=True,
-                shell=False,
-                )
+                               capture_output=True,
+                               text=True,
+                               shell=False,
+                               )
                 print(f"Model '{model_name}' downloaded successfully.")
         except Exception as e:
             print(f"Failed to check/download model '{model_name}': {e}")
