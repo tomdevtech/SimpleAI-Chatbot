@@ -1,5 +1,9 @@
-"""This file provides the AI model and all of its
+"""
+This file provides the AI model and all of its
 functionalities for repository code analysis and Q&A.
+
+This module defines the `AIAssistant` class, which facilitates
+code repository analysis, contextual querying, and documentation generation.
 """
 
 import os
@@ -25,6 +29,16 @@ class AIAssistant:
         SummaryPromptTemplate,
         FileTypes=None,
     ):
+        """
+        Initialize the AI Assistant with the given parameters.
+
+        Args:
+            ModelName (str): The name of the AI model to use.
+            Temperature (float): The temperature setting for model responses.
+            PromptTemplate (str): Template for user prompts.
+            SummaryPromptTemplate (str): Template for generating summaries.
+            FileTypes (list, optional): List of file types to include in analysis.
+        """
         self.RepoPath = None
         self.ModelName = ModelName
         self.Temperature = Temperature
@@ -44,7 +58,13 @@ class AIAssistant:
         self.ManageOllama()
 
     def SetTemplates(self, PromptTemplate, SummaryPromptTemplate):
-        """Sets the prompt templates."""
+        """
+        Set the prompt templates for user queries and summaries.
+
+        Args:
+            PromptTemplate (str): The template for user questions.
+            SummaryPromptTemplate (str): The template for generating summaries.
+        """
         DefaultPrompt = """
         You are an expert code reviewer. Answer the following question
         based on the provided repository context:
@@ -73,12 +93,23 @@ class AIAssistant:
         )
 
     def SetRepoPath(self, Path):
-        """Sets the path for the repository."""
+        """
+        Set the path for the repository to analyze.
+
+        Args:
+            Path (str): Path to the code repository.
+        """
         self.RepoPath = Path
 
     @unittest.skip("Not needed for test.")
     def ManageOllama(self):
-        """Manage Ollama server and model availability."""
+        """
+        Manage Ollama server and model availability.
+
+        Ensures the Ollama server is running and the required model
+        is available. If the server is not running, it attempts to start it.
+        If the model is not available, it downloads the specified model.
+        """
         OllamaPath = shutil.which("ollama")
         if not OllamaPath:
             print("Ollama executable not found. Please install Ollama.")
@@ -127,7 +158,12 @@ class AIAssistant:
             exit(1)
 
     def LoadDocuments(self):
-        """Load documents based on specified file types."""
+        """
+        Load documents from the repository based on specified file types.
+
+        Returns:
+            list: A list of dictionaries containing file paths and content.
+        """
         Docs = []
         if not self.RepoPath:
             print("Repository path is not set.")
@@ -146,7 +182,12 @@ class AIAssistant:
         return Docs
 
     def CreateVectorStore(self, Docs):
-        """Create Chroma vector store for contextual queries."""
+        """
+        Create a Chroma vector store for contextual document queries.
+
+        Args:
+            Docs (list): List of documents to be processed into vectors.
+        """
         if not Docs:
             print("No documents provided for vector store creation.")
             return
@@ -165,7 +206,12 @@ class AIAssistant:
         print("Vector store created successfully.")
 
     def AnalyzeRepository(self):
-        """Complete analysis and vector store creation."""
+        """
+        Perform analysis of the repository and create a vector store.
+
+        Returns:
+            str: Message indicating the result of the analysis.
+        """
         print("Loading documents...")
         Docs = self.LoadDocuments()
         if not Docs:
@@ -181,7 +227,15 @@ class AIAssistant:
         return "Repository analysis complete. You can now ask questions!"
 
     def GenerateSummary(self, Content):
-        """Generate a structured summary using the Assistant."""
+        """
+        Generate a structured summary of the repository contents.
+
+        Args:
+            Content (str): The repository content to summarize.
+
+        Returns:
+            str: The generated summary.
+        """
         Prompt = self.SummaryPromptTemplate.format(Context=Content)
         Response = self.Assistant.invoke(Prompt)
         if isinstance(Response, AIMessage):
@@ -189,7 +243,15 @@ class AIAssistant:
         return str(Response)
 
     def AskQuestion(self, Query):
-        """Ask a question based on the repository context."""
+        """
+        Ask a contextual question based on the repository content.
+
+        Args:
+            Query (str): The question to ask.
+
+        Returns:
+            str: The AI-generated response to the question.
+        """
         if not self.SummaryCompleted:
             return (
                 "Repository analysis not complete. "
@@ -215,7 +277,12 @@ class AIAssistant:
         return str(Response)
 
     def WriteSummary(self, Content):
-        """Write the summary to a Markdown file."""
+        """
+        Write the generated summary to a Markdown file.
+
+        Args:
+            Content (str): The summary content to write.
+        """
         try:
             with open("RepoSummary.md", "w", encoding="utf-8") as F:
                 F.write(Content)
