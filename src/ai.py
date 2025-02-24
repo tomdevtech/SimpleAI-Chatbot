@@ -3,6 +3,7 @@ functionalities for repository code analysis and Q&A.
 """
 
 import os
+import shutil
 import unittest
 import subprocess  # nosec B404
 import requests
@@ -88,12 +89,13 @@ class AIAssistant:
             print("Ollama server not running. Attempting to start...")
 
         try:
+            ollama_path = shutil.which("ollama")
             subprocess.Popen(
-                ["ollama", "serve"],
+                [ollama_path, "serve"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-            )
-            print("Ollama server started successfully.")
+                shell=False
+            )  # nosec B607
         except FileNotFoundError:
             print(
                 "Ollama is not installed. Please install Ollama using "
@@ -104,15 +106,16 @@ class AIAssistant:
     def check_and_pull_model(self, model_name):
         """Check if a specific model exists and pull if not."""
         try:
+            ollama_path = shutil.which("ollama")
             result = subprocess.run(
-                ["ollama", "list"],
+                [ollama_path, "pull", model_name],
                 capture_output=True,
                 text=True,
-                shell=False,
-            ) #nosec
+                shell=False
+                )  # nosec B607
             if model_name not in result.stdout:
                 print(f"Model '{model_name}' not found. Downloading...")
-                subprocess.run(["ollama", "pull", model_name], 
+                subprocess.run(["ollama", "pull", model_name],
                 capture_output=True,
                 text=True,
                 shell=False,
