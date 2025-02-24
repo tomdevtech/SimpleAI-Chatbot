@@ -69,8 +69,7 @@ class AIAssistant:
             )
         else:
             self.SummaryPromptTemplate = ChatPromptTemplate.from_template(
-                SummaryPromptTemplate
-            )
+            SummaryPromptTemplate)
 
     def SetRepoPath(self, Path):
         """Sets the path for the repository."""
