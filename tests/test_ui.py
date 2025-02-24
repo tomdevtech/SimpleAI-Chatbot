@@ -11,7 +11,7 @@ class TestUI:
     """Value Section."""
 
     @pytest.mark.parametrize(
-        """ModelName, Creativity, Prompt, SummaryPrompt, FileTypes, 
+        """ModelName, Creativity, Prompt, SummaryPrompt, FileTypes,
         expected_AIAssistant, expected_UI""",
         [
             (
