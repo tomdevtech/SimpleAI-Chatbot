@@ -42,7 +42,7 @@ class AIAssistant:
         """Sets the prompt for the templates."""
         if not PromptTemplate:
             self.PromptTemplate = ChatPromptTemplate.from_template(
-                """
+            """
             You are an expert code reviewer. Answer the following question
             based on the provided repository context:
             Context:
