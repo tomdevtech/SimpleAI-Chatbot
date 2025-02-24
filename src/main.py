@@ -1,4 +1,4 @@
-"""This file runs the ai model and lets you interact with it."""
+"""This file runs the AI model and lets you interact with it."""
 
 from ai import AIAssistant
 from ui import StreamlitUI
@@ -7,19 +7,27 @@ from ui import StreamlitUI
 class MainApp:
     """Main Application class to combine AI Assistant and UI."""
 
-    def __init__(self, ModelName, Creativity, PromptTemplate, 
-        SummaryPromptTemplate):
+    def __init__(
+        self,
+        model_name,
+        creativity,
+        prompt_template,
+        summary_prompt_template
+    ):
         """Initialize the application."""
-        self.AIAssistant = AIAssistant(
-            ModelName, Creativity, PromptTemplate, SummaryPromptTemplate
+        self.ai_assistant = AIAssistant(
+            model_name,
+            creativity,
+            prompt_template,
+            summary_prompt_template
         )
-        self.UI = StreamlitUI(self.AIAssistant)
+        self.ui = StreamlitUI(self.ai_assistant)
 
-    def Run(self):
+    def run(self):
         """Run the application."""
-        self.UI.Run()
+        self.ui.run()
 
 
 if __name__ == "__main__":
-    App = MainApp("llama3.1:8b", 1.0, "", "")
-    App.Run()
+    app = MainApp("llama3.1:8b", 1.0, "", "")
+    app.run()
