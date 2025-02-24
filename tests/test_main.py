@@ -23,7 +23,8 @@ class TestMainApp:
             ),
         ],
     )
-    def test_MainApp(self, ModelName, Creativity, Prompt, SummaryPrompt, expected_Main):
+    def test_MainApp(self, ModelName, Creativity, Prompt, 
+        SummaryPrompt, expected_Main):
         """Test the main application."""
         self.MainApp = MainApp(ModelName, Creativity, Prompt, SummaryPrompt)
         assert (self.MainApp is not None) == expected_Main

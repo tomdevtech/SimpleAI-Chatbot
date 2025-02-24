@@ -4,7 +4,7 @@ functionalities for repository code analysis and Q&A.
 
 import os
 import unittest
-import subprocess
+import subprocess  # nosec B404
 import requests
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
@@ -80,7 +80,7 @@ class AIAssistant:
     def check_ollama(self):
         """Check if Ollama server is running and start if necessary."""
         try:
-            response = requests.get("http://localhost:11434/health")
+            response = requests.get("http://localhost:11434/health", timeout=5)
             if response.status_code == 200:
                 print("Ollama server is running.")
                 return
@@ -108,10 +108,15 @@ class AIAssistant:
                 ["ollama", "list"],
                 capture_output=True,
                 text=True,
-            )
+                shell=False,
+            ) #nosec
             if model_name not in result.stdout:
                 print(f"Model '{model_name}' not found. Downloading...")
-                subprocess.run(["ollama", "pull", model_name])
+                subprocess.run(["ollama", "pull", model_name], 
+                capture_output=True,
+                text=True,
+                shell=False,
+                )
                 print(f"Model '{model_name}' downloaded successfully.")
         except Exception as e:
             print(f"Failed to check/download model '{model_name}': {e}")

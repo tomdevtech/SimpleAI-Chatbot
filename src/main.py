@@ -7,7 +7,8 @@ from ui import StreamlitUI
 class MainApp:
     """Main Application class to combine AI Assistant and UI."""
 
-    def __init__(self, ModelName, Creativity, PromptTemplate, SummaryPromptTemplate):
+    def __init__(self, ModelName, Creativity, PromptTemplate, 
+        SummaryPromptTemplate):
         """Initialize the application."""
         self.AIAssistant = AIAssistant(
             ModelName, Creativity, PromptTemplate, SummaryPromptTemplate
