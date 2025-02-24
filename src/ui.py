@@ -17,7 +17,8 @@ class StreamlitUI:
         """Run the Streamlit UI."""
         st.title("AI Assistant")
         st.write(
-            "Welcome to the AI Repo Summarizer!\nPlease enter the repository path first!"
+            """Welcome to the AI Repo Summarizer!\n
+            Please enter the repository path first!"""
         )
 
         # Path Input
