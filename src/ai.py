@@ -31,7 +31,10 @@ class AIAssistant:
         )
         self.vector_store = None
         self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
-        self.assistant = OllamaLLM(model=self.model_name, temperature=self.temperature)
+        self.assistant = OllamaLLM(
+            model=self.model_name,
+            temperature=self.temperature,
+        )
         self.context = ""
         self.summary_completed = False
 
@@ -98,7 +101,9 @@ class AIAssistant:
         """Check if a specific model exists and pull if not."""
         try:
             result = subprocess.run(
-                ["ollama", "list"], capture_output=True, text=True
+                ["ollama", "list"],
+                capture_output=True,
+                text=True,
             )
             if model_name not in result.stdout:
                 print(f"Model '{model_name}' not found. Downloading...")
@@ -116,7 +121,12 @@ class AIAssistant:
                 if any(file.endswith(ft) for ft in self.file_types):
                     file_path = os.path.join(root, file)
                     try:
-                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                        with open(
+                            file_path,
+                            "r",
+                            encoding="utf-8",
+                            errors="ignore",
+                        ) as f:
                             content = f.read()
                             docs.append({"Path": file_path, "Content": content})
                     except Exception as e:
@@ -126,12 +136,16 @@ class AIAssistant:
     def create_vector_store(self, docs):
         """Create Chroma vector store for contextual queries."""
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=100
+            chunk_size=1000,
+            chunk_overlap=100,
         )
         splits = text_splitter.create_documents(
             [doc["Content"] for doc in docs]
         )
-        self.vector_store = Chroma.from_documents(splits, embedding=self.embeddings)
+        self.vector_store = Chroma.from_documents(
+            splits,
+            embedding=self.embeddings,
+        )
         print("Vector store created successfully.")
 
     def analyze_repository(self):
@@ -151,18 +165,26 @@ class AIAssistant:
         return "Repository analysis complete. You can now ask questions!"
 
     def generate_summary(self, content):
-        """Generate a structured summary using the Assistant with a specific prompt."""
+        """Generate a structured summary using the Assistant."""
         prompt = self.summary_prompt_template.format(Context=content)
         response = self.assistant.invoke(prompt)
-        return response.content if isinstance(response, AIMessage) else str(response)
+        if isinstance(response, AIMessage):
+            return response.content
+        return str(response)
 
     def ask_question(self, query):
-        """Ask a question based on the repository context using the vector store."""
+        """Ask a question based on the repository context."""
         if not self.summary_completed:
-            return "Repository analysis not complete. Please analyze the repository first."
+            return (
+                "Repository analysis not complete. "
+                "Please analyze the repository first."
+            )
 
         if not self.vector_store:
-            return "No vector store available. Please analyze a repository first."
+            return (
+                "No vector store available. "
+                "Please analyze a repository first."
+            )
 
         # Retrieve relevant documents using similarity search
         relevant_docs = self.vector_store.similarity_search(query, k=5)
@@ -172,7 +194,9 @@ class AIAssistant:
         prompt = self.prompt_template.format(Context=context, Question=query)
         response = self.assistant.invoke(prompt)
 
-        return response.content if isinstance(response, AIMessage) else str(response)
+        if isinstance(response, AIMessage):
+            return response.content
+        return str(response)
 
     def write_summary(self, content):
         """Write the summary to a Markdown file."""
@@ -182,3 +206,4 @@ class AIAssistant:
             print("Summary written to RepoSummary.md")
         except Exception as e:
             print(f"Failed to write summary: {e}")
+            
