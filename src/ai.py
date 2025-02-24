@@ -1,4 +1,4 @@
-"""This file provides the AI model and all of its 
+"""This file provides the AI model and all of its
 functionalities for repository code ananalysis and Q&A."""
 
 import os
@@ -43,7 +43,7 @@ class AIAssistant:
         if not PromptTemplate:
             self.PromptTemplate = ChatPromptTemplate.from_template(
                 """
-            You are an expert code reviewer. Answer the following question 
+            You are an expert code reviewer. Answer the following question
             based on the provided repository context:
             
             Context:
@@ -56,14 +56,15 @@ class AIAssistant:
             """
             )
         else:
-            self.PromptTemplate = ChatPromptTemplate.from_template(PromptTemplate)
+            self.PromptTemplate = ChatPromptTemplate.from_template(
+                PromptTemplate)
 
         if not SummaryPromptTemplate:
             self.SummaryPromptTemplate = ChatPromptTemplate.from_template(
                 """
             You are a technical documentation assistant. 
             Summarize the provided repository contents in a clear and concise manner.
-            
+        
             Repository Contents:
             {Context}
             
@@ -100,7 +101,8 @@ class AIAssistant:
         except FileNotFoundError:
             print(
                 """Ollama is not installed. Please install 
-                Ollama using 'brew install ollama' or appropriate for your OS."""
+                Ollama using 'brew install ollama'
+                or appropriate for your OS."""
             )
             exit(1)
 
