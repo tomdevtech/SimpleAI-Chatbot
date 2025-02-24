@@ -1,10 +1,8 @@
 """
-This file provides the AI model and its functionalities
-for repository code analysis and Q&A.
+This file provides the AI model and its functionalities.
 
 This module defines the `AIAssistant` class, which facilitates
 code repository analysis, contextual querying, and documentation generation.
-
 """
 
 import os
