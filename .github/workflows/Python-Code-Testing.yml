@@ -99,7 +99,7 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        run: pip install pytest streamlit langchain_ollama langchain_core langchain
+        run: pip install pytest streamlit langchain_ollama langchain_core langchain_chroma langchain 
 
       - name: Run unit tests
         run: python -m pytest tests/
