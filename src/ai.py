@@ -19,34 +19,33 @@ class AIAssistant:
 
     def __init__(
         self,
-        model_name,
-        temperature,
-        prompt_template,
-        summary_prompt_template,
-        file_types=None,
+        ModelName,
+        Temperature,
+        PromptTemplate,
+        SummaryPromptTemplate,
+        FileTypes=None,
     ):
-        self.repo_path = None
-        self.model_name = model_name
-        self.temperature = temperature
-        self.file_types = (
-            file_types if file_types else [".py", ".js", ".java",
-                                           ".md", ".txt"]
+        self.RepoPath = None
+        self.ModelName = ModelName
+        self.Temperature = Temperature
+        self.FileTypes = (
+            FileTypes if FileTypes else [".py", ".js", ".java", ".md", ".txt"]
         )
-        self.vector_store = None
-        self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
-        self.assistant = OllamaLLM(
-            model=self.model_name,
-            temperature=self.temperature,
+        self.VectorStore = None
+        self.Embeddings = OllamaEmbeddings(model="nomic-embed-text")
+        self.Assistant = OllamaLLM(
+            model=self.ModelName,
+            temperature=self.Temperature,
         )
-        self.context = ""
-        self.summary_completed = False
+        self.Context = ""
+        self.SummaryCompleted = False
 
-        self.set_templates(prompt_template, summary_prompt_template)
-        self.check_ollama()
+        self.SetTemplates(PromptTemplate, SummaryPromptTemplate)
+        self.ManageOllama()
 
-    def set_templates(self, prompt_template, summary_prompt_template):
+    def SetTemplates(self, PromptTemplate, SummaryPromptTemplate):
         """Sets the prompt templates."""
-        default_prompt = """
+        DefaultPrompt = """
         You are an expert code reviewer. Answer the following question
         based on the provided repository context:
         Context:
@@ -56,7 +55,7 @@ class AIAssistant:
         Please provide a concise and clear answer.
         """
 
-        default_summary_prompt = """
+        DefaultSummaryPrompt = """
         You are a technical documentation assistant.
         Summarize the provided repository contents
         in a clear and concise manner.
@@ -66,168 +65,160 @@ class AIAssistant:
         code structure, and any important observations.
         """
 
-        self.prompt_template = ChatPromptTemplate.from_template(
-            prompt_template or default_prompt
+        self.PromptTemplate = ChatPromptTemplate.from_template(
+            PromptTemplate or DefaultPrompt
         )
-        self.summary_prompt_template = ChatPromptTemplate.from_template(
-            summary_prompt_template or default_summary_prompt
+        self.SummaryPromptTemplate = ChatPromptTemplate.from_template(
+            SummaryPromptTemplate or DefaultSummaryPrompt
         )
 
-    def set_repo_path(self, path):
+    def SetRepoPath(self, Path):
         """Sets the path for the repository."""
-        self.repo_path = path
+        self.RepoPath = Path
 
     @unittest.skip("Not needed for test.")
-    def check_ollama(self):
-        """Check if Ollama server is running and start if necessary."""
+    def ManageOllama(self):
+        """Manage Ollama server and model availability."""
+        OllamaPath = shutil.which("ollama")
+        if not OllamaPath:
+            print("Ollama executable not found. Please install Ollama.")
+            exit(1)
+
+        # Check if Ollama server is running
         try:
-            response = requests.get("http://localhost:11434/health", timeout=5)
-            if response.status_code == 200:
+            Response = requests.get("http://localhost:11434/health", timeout=5)
+            if Response.status_code == 200:
                 print("Ollama server is running.")
-                return
+            else:
+                raise requests.exceptions.ConnectionError
         except requests.exceptions.ConnectionError:
             print("Ollama server not running. Attempting to start...")
-
-        ollama_path = shutil.which("ollama")
-        if ollama_path:
             try:
                 subprocess.Popen(
-                    [ollama_path, "serve"],
+                    [OllamaPath, "serve"],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
                 )  # nosec
                 print("Ollama server started successfully.")
-            except Exception as e:
-                print(f"Failed to start Ollama server: {e}")
-        else:
-            print(
-                "Ollama is not installed. Please install Ollama using "
-                "'brew install ollama' or the appropriate command for your OS."
-            )
-            exit(1)
+            except Exception as E:
+                print(f"Failed to start Ollama server: {E}")
+                exit(1)
 
-    def check_and_pull_model(self, model_name):
-        """Check if a specific model exists and pull if not."""
-        ollama_path = shutil.which("ollama")
-        if not ollama_path:
-            print("Ollama executable not found.")
-            return
-
+        # Check if the specified model exists and pull if necessary
         try:
-            result = subprocess.run(
-                [ollama_path, "list"],
+            Result = subprocess.run(
+                [OllamaPath, "list"],
                 capture_output=True,
                 text=True
             )  # nosec
 
-            if model_name not in result.stdout:
-                print(f"Model '{model_name}' not found. Downloading...")
+            if self.ModelName not in Result.stdout:
+                print(f"Model '{self.ModelName}' not found. Downloading...")
                 subprocess.run(
-                    [ollama_path, "pull", model_name],
+                    [OllamaPath, "pull", self.ModelName],
                     capture_output=True,
                     text=True
                 )  # nosec
-                print(f"Model '{model_name}' downloaded successfully.")
+                print(f"Model '{self.ModelName}' downloaded successfully.")
             else:
-                print(f"Model '{model_name}' already exists.")
-        except Exception as e:
-            print(f"Failed to check/download model '{model_name}': {e}")
+                print(f"Model '{self.ModelName}' already exists.")
+        except Exception as E:
+            print(f"Failed to check/download model '{self.ModelName}': {E}")
             exit(1)
 
-    def load_documents(self):
+    def LoadDocuments(self):
         """Load documents based on specified file types."""
-        docs = []
-        if not self.repo_path:
+        Docs = []
+        if not self.RepoPath:
             print("Repository path is not set.")
-            return docs
+            return Docs
 
-        for root, _, files in os.walk(self.repo_path):
-            for file in files:
-                if any(file.endswith(ft) for ft in self.file_types):
-                    file_path = os.path.join(root, file)
+        for Root, _, Files in os.walk(self.RepoPath):
+            for File in Files:
+                if any(File.endswith(FileType) for FileType in self.FileTypes):
+                    FilePath = os.path.join(Root, File)
                     try:
-                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                            content = f.read()
-                            docs.append(
-                                {"Path": file_path, "Content": content})
-                    except Exception as e:
-                        print(f"Failed to read {file_path}: {e}")
-        return docs
+                        with open(FilePath, "r", encoding="utf-8", errors="ignore") as F:
+                            Content = F.read()
+                            Docs.append({"Path": FilePath, "Content": Content})
+                    except Exception as E:
+                        print(f"Failed to read {FilePath}: {E}")
+        return Docs
 
-    def create_vector_store(self, docs):
+    def CreateVectorStore(self, Docs):
         """Create Chroma vector store for contextual queries."""
-        if not docs:
+        if not Docs:
             print("No documents provided for vector store creation.")
             return
 
-        text_splitter = RecursiveCharacterTextSplitter(
+        TextSplitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=100,
         )
-        splits = text_splitter.create_documents(
-            [doc["Content"] for doc in docs]
+        Splits = TextSplitter.create_documents(
+            [Doc["Content"] for Doc in Docs]
         )
-        self.vector_store = Chroma.from_documents(
-            splits,
-            embedding=self.embeddings,
+        self.VectorStore = Chroma.from_documents(
+            Splits,
+            embedding=self.Embeddings,
         )
         print("Vector store created successfully.")
 
-    def analyze_repository(self):
+    def AnalyzeRepository(self):
         """Complete analysis and vector store creation."""
         print("Loading documents...")
-        docs = self.load_documents()
-        if not docs:
+        Docs = self.LoadDocuments()
+        if not Docs:
             return "No matching documents found."
 
         print("Creating vector store...")
-        self.create_vector_store(docs)
-        self.context = "\n\n".join(doc["Content"] for doc in docs)
-        summary = self.generate_summary(self.context)
-        self.write_summary(summary)
-        self.summary_completed = True
+        self.CreateVectorStore(Docs)
+        self.Context = "\n\n".join(Doc["Content"] for Doc in Docs)
+        Summary = self.GenerateSummary(self.Context)
+        self.WriteSummary(Summary)
+        self.SummaryCompleted = True
 
         return "Repository analysis complete. You can now ask questions!"
 
-    def generate_summary(self, content):
+    def GenerateSummary(self, Content):
         """Generate a structured summary using the Assistant."""
-        prompt = self.summary_prompt_template.format(Context=content)
-        response = self.assistant.invoke(prompt)
-        if isinstance(response, AIMessage):
-            return response.content
-        return str(response)
+        Prompt = self.SummaryPromptTemplate.format(Context=Content)
+        Response = self.Assistant.invoke(Prompt)
+        if isinstance(Response, AIMessage):
+            return Response.content
+        return str(Response)
 
-    def ask_question(self, query):
+    def AskQuestion(self, Query):
         """Ask a question based on the repository context."""
-        if not self.summary_completed:
+        if not self.SummaryCompleted:
             return (
                 "Repository analysis not complete. "
                 "Please analyze the repository first."
             )
 
-        if not self.vector_store:
+        if not self.VectorStore:
             return (
                 "No vector store available. "
                 "Please analyze a repository first."
             )
 
         # Retrieve relevant documents using similarity search
-        relevant_docs = self.vector_store.similarity_search(query, k=5)
-        context = "\n\n".join(doc.page_content for doc in relevant_docs)
+        RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
+        Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
 
         # Create prompt based on retrieved context
-        prompt = self.prompt_template.format(Context=context, Question=query)
-        response = self.assistant.invoke(prompt)
+        Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
+        Response = self.Assistant.invoke(Prompt)
 
-        if isinstance(response, AIMessage):
-            return response.content
-        return str(response)
+        if isinstance(Response, AIMessage):
+            return Response.content
+        return str(Response)
 
-    def write_summary(self, content):
+    def WriteSummary(self, Content):
         """Write the summary to a Markdown file."""
         try:
-            with open("RepoSummary.md", "w", encoding="utf-8") as f:
-                f.write(content)
+            with open("RepoSummary.md", "w", encoding="utf-8") as F:
+                F.write(Content)
             print("Summary written to RepoSummary.md")
-        except Exception as e:
-            print(f"Failed to write summary: {e}")
+        except Exception as E:
+            print(f"Failed to write summary: {E}")

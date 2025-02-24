@@ -26,16 +26,16 @@ class StreamlitUI:
         if st.button("Set Path"):
             if self.RepoPath:
                 st.write(f"Repository path set to: {self.RepoPath}")
-                self.AIAssistant.set_repo_path(self.ChatHistory)
+                self.AIAssistant.SetRepoPath(self.ChatHistory)
                 st.write("Analyzing repository...")
-                result = self.AIAssistant.analyze_repository()
+                result = self.AIAssistant.AnalyzeRepository()
                 st.write(result)
 
         # User Input
         UserInput = st.text_input("Your question:")
         if st.button("Send Question"):
             if UserInput:
-                Response = self.AIAssistant.ask_question(UserInput)
+                Response = self.AIAssistant.AskQuestion(UserInput)
                 self.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
                 st.write(Response)
 
