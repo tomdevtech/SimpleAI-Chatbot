@@ -29,8 +29,7 @@ class AIAssistant:
         self.model_name = model_name
         self.temperature = temperature
         self.file_types = (
-            file_types if file_types else [".py", ".js", ".java",
-                                           ".md", ".txt"]
+            file_types if file_types else [".py", ".js", ".java", ".md", ".txt"]
         )
         self.vector_store = None
         self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
@@ -88,15 +87,18 @@ class AIAssistant:
         except requests.exceptions.ConnectionError:
             print("Ollama server not running. Attempting to start...")
 
-        try:
-            ollama_path = shutil.which("ollama")
-            subprocess.Popen(
-                [ollama_path, "serve"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                shell=False
-            )  # nosec B607
-        except FileNotFoundError:
+        ollama_path = shutil.which("ollama")
+        if ollama_path:
+            try:
+                subprocess.Popen(
+                    [ollama_path, "serve"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )  # nosec
+                print("Ollama server started successfully.")
+            except Exception as e:
+                print(f"Failed to start Ollama server: {e}")
+        else:
             print(
                 "Ollama is not installed. Please install Ollama using "
                 "'brew install ollama' or the appropriate command for your OS."
@@ -105,22 +107,28 @@ class AIAssistant:
 
     def check_and_pull_model(self, model_name):
         """Check if a specific model exists and pull if not."""
+        ollama_path = shutil.which("ollama")
+        if not ollama_path:
+            print("Ollama executable not found.")
+            return
+
         try:
-            ollama_path = shutil.which("ollama")
             result = subprocess.run(
-                [ollama_path, "pull", model_name],
+                [ollama_path, "list"],
                 capture_output=True,
-                text=True,
-                shell=False
-            )  # nosec B607
+                text=True
+            )  # nosec
+
             if model_name not in result.stdout:
                 print(f"Model '{model_name}' not found. Downloading...")
-                subprocess.run(["ollama", "pull", model_name],
-                               capture_output=True,
-                               text=True,
-                               shell=False,
-                               )
+                subprocess.run(
+                    [ollama_path, "pull", model_name],
+                    capture_output=True,
+                    text=True
+                )  # nosec
                 print(f"Model '{model_name}' downloaded successfully.")
+            else:
+                print(f"Model '{model_name}' already exists.")
         except Exception as e:
             print(f"Failed to check/download model '{model_name}': {e}")
             exit(1)
@@ -128,26 +136,28 @@ class AIAssistant:
     def load_documents(self):
         """Load documents based on specified file types."""
         docs = []
+        if not self.repo_path:
+            print("Repository path is not set.")
+            return docs
+
         for root, _, files in os.walk(self.repo_path):
             for file in files:
                 if any(file.endswith(ft) for ft in self.file_types):
                     file_path = os.path.join(root, file)
                     try:
-                        with open(
-                            file_path,
-                            "r",
-                            encoding="utf-8",
-                            errors="ignore",
-                        ) as f:
+                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                             content = f.read()
-                            docs.append({"Path": file_path,
-                                         "Content": content})
+                            docs.append({"Path": file_path, "Content": content})
                     except Exception as e:
                         print(f"Failed to read {file_path}: {e}")
         return docs
 
     def create_vector_store(self, docs):
         """Create Chroma vector store for contextual queries."""
+        if not docs:
+            print("No documents provided for vector store creation.")
+            return
+
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=100,
