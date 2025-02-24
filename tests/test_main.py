@@ -11,12 +11,19 @@ class TestMainApp:
     """Value Section."""
 
     @pytest.mark.parametrize(
-        "expected_Main",
+        """ModelName, Creativity, Prompt, SummaryPrompt,
+        expected_Main""",
         [
-            (True),
+            (
+                "llama3.1:8b",
+                1,
+                "This is a test prompt.",
+                "This is a summary test prompt.",
+                True,
+            ),
         ],
     )
-    def test_MainApp(self, expected_Main):
+    def test_MainApp(self, ModelName, Creativity, Prompt, SummaryPrompt, expected_Main):
         """Test the main application."""
-        self.MainApp = MainApp()
+        self.MainApp = MainApp(ModelName, Creativity, Prompt, SummaryPrompt)
         assert (self.MainApp is not None) == expected_Main

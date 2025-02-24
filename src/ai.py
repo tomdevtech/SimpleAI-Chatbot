@@ -76,7 +76,7 @@ class AIAssistant:
         """Sets the path for the repository."""
         self.repo_path = path
 
-    @unittest.skip("Not needed for test.")    
+    @unittest.skip("Not needed for test.")
     def check_ollama(self):
         """Check if Ollama server is running and start if necessary."""
         try:

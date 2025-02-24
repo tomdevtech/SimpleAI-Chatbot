@@ -7,9 +7,11 @@ from ui import StreamlitUI
 class MainApp:
     """Main Application class to combine AI Assistant and UI."""
 
-    def __init__(self):
+    def __init__(self, ModelName, Creativity, PromptTemplate, SummaryPromptTemplate):
         """Initialize the application."""
-        self.AIAssistant = AIAssistant("llama3.1:8b", 1.0)
+        self.AIAssistant = AIAssistant(
+            ModelName, Creativity, PromptTemplate, SummaryPromptTemplate
+        )
         self.UI = StreamlitUI(self.AIAssistant)
 
     def Run(self):
@@ -18,5 +20,5 @@ class MainApp:
 
 
 if __name__ == "__main__":
-    App = MainApp()
+    App = MainApp("llama3.1:8b", 1.0, "", "")
     App.Run()
