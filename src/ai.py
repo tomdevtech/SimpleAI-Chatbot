@@ -4,6 +4,7 @@ functionalities for repository code analysis and Q&A.
 
 This module defines the `AIAssistant` class, which facilitates
 code repository analysis, contextual querying, and documentation generation.
+
 """
 
 import os
