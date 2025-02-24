@@ -25,7 +25,7 @@ class MainApp:
 
     def run(self):
         """Run the application."""
-        self.ui.run()
+        self.ui.Run()
 
 
 if __name__ == "__main__":

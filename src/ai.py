@@ -29,7 +29,8 @@ class AIAssistant:
         self.model_name = model_name
         self.temperature = temperature
         self.file_types = (
-            file_types if file_types else [".py", ".js", ".java", ".md", ".txt"]
+            file_types if file_types else [".py", ".js", ".java",
+                                           ".md", ".txt"]
         )
         self.vector_store = None
         self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
@@ -147,7 +148,8 @@ class AIAssistant:
                     try:
                         with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                             content = f.read()
-                            docs.append({"Path": file_path, "Content": content})
+                            docs.append(
+                                {"Path": file_path, "Content": content})
                     except Exception as e:
                         print(f"Failed to read {file_path}: {e}")
         return docs
