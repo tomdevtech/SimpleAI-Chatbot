@@ -10,18 +10,18 @@ class TestAI:
     """Value Section."""
 
     @pytest.mark.parametrize(
-        "ModelName, Context, Creativity, expected_AIAssistant",
+        "ModelName, Creativity, Prompt, SummaryPrompt, FileTypes, expected_AIAssistant"
         [
             (
-                "llama3.2",
-                """You are a smart assistant called Bob and you know everything
-            about computer science.""",
+                "llama3.1:8b",
                 1,
-                True,
+                "This is a test prompt.",
+                "This is a summary test prompt.",
+                [".py", ".js", ".java", ".md", ".txt"]
             ),
         ],
     )
-    def test_AI(self, ModelName, Context, Creativity, expected_AIAssistant):
+    def test_AI( self, ModelName, Creativity, Prompt, SummaryPrompt, FileTypes, expected_AIAssistant):
         """Initialize the AI."""
-        self.AIAssistant = AIAssistant(ModelName, Context, Creativity)
+        self.AIAssistant = AIAssistant(ModelName, Creativity, Prompt, SummaryPrompt, FileTypes)
         assert (self.AIAssistant is not None) == expected_AIAssistant
