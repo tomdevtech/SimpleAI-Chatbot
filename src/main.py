@@ -9,10 +9,7 @@ class MainApp:
 
     def __init__(self):
         """Initialize the application."""
-        self.AIAssistant = AIAssistant(
-            "llama3.1:8b",
-            1.0
-        )
+        self.AIAssistant = AIAssistant("llama3.1:8b", 1.0)
         self.UI = StreamlitUI(self.AIAssistant)
 
     def Run(self):

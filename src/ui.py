@@ -16,9 +16,11 @@ class StreamlitUI:
     def Run(self):
         """Run the Streamlit UI."""
         st.title("AI Assistant")
-        st.write("Welcome to the AI Repo Summarizer!\nPlease enter the repository path first!")
+        st.write(
+            "Welcome to the AI Repo Summarizer!\nPlease enter the repository path first!"
+        )
 
-         # Path Input
+        # Path Input
         self.RepoPath = st.text_input("Set Repository Path:", self.RepoPath)
         if st.button("Set Path"):
             if self.RepoPath:

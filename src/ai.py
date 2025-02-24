@@ -13,17 +13,26 @@ from langchain_core.messages import AIMessage
 class AIAssistant:
     """AI Assistent Class for Repository Analysis and Contextual Chat."""
 
-    def __init__(self, ModelName, Temperature, PromptTemplate, SummaryPromptTemplate, FileTypes=None):
+    def __init__(
+        self,
+        ModelName,
+        Temperature,
+        PromptTemplate,
+        SummaryPromptTemplate,
+        FileTypes=None,
+    ):
         self.RepoPath = None
         self.ModelName = ModelName
         self.Temperature = Temperature
-        self.FileTypes = FileTypes if FileTypes else [".py", ".js", ".java", ".md", ".txt"]
+        self.FileTypes = (
+            FileTypes if FileTypes else [".py", ".js", ".java", ".md", ".txt"]
+        )
         self.VectorStore = None
         self.Embeddings = OllamaEmbeddings(model="nomic-embed-text")
         self.Assistant = OllamaLLM(model=self.ModelName, temperature=self.Temperature)
         self.Context = ""
         self.SummaryCompleted = False
-        
+
         self.SetTemplates(PromptTemplate, SummaryPromptTemplate)
         self.CheckOllama()
 
@@ -31,8 +40,9 @@ class AIAssistant:
         """Sets the prompt for the templates."""
         if not PromptTemplate:
             self.PromptTemplate = ChatPromptTemplate.from_template(
-            """
-            You are an expert code reviewer. Answer the following question based on the provided repository context:
+                """
+            You are an expert code reviewer. Answer the following question 
+            based on the provided repository context:
             
             Context:
             {Context}
@@ -42,28 +52,32 @@ class AIAssistant:
             
             Please provide a concise and clear answer.
             """
-        )
-        else: 
+            )
+        else:
             self.PromptTemplate = ChatPromptTemplate.from_template(PromptTemplate)
 
         if not SummaryPromptTemplate:
             self.SummaryPromptTemplate = ChatPromptTemplate.from_template(
-            """
-            You are a technical documentation assistant. Summarize the provided repository contents in a clear and concise manner.
+                """
+            You are a technical documentation assistant. 
+            Summarize the provided repository contents in a clear and concise manner.
             
             Repository Contents:
             {Context}
             
-            Provide a structured summary highlighting key points, code structure, and any important observations.
+            Provide a structured summary highlighting key points, 
+            code structure, and any important observations.
             """
-        )
+            )
         else:
-            self.SummaryPromptTemplate = ChatPromptTemplate.from_template(SummaryPromptTemplate)
-    
+            self.SummaryPromptTemplate = ChatPromptTemplate.from_template(
+                SummaryPromptTemplate
+            )
+
     def SetRepoPath(self, Path):
         """Sets the path for the repository."""
         self.RepoPath = Path
-    
+
     def CheckOllama(self):
         """Check if Ollama server is running and start if necessary."""
         try:
@@ -75,10 +89,17 @@ class AIAssistant:
             print("Ollama server not running. Attempting to start...")
 
         try:
-            subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(
+                ["ollama", "serve"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
             print("Ollama server started successfully.")
         except FileNotFoundError:
-            print("Ollama is not installed. Please install Ollama using 'brew install ollama' or appropriate for your OS.")
+            print(
+                """Ollama is not installed. Please install 
+                Ollama using 'brew install ollama' or appropriate for your OS."""
+            )
             exit(1)
 
     def CheckAndPullModel(self, ModelName):
@@ -101,7 +122,9 @@ class AIAssistant:
                 if any(file.endswith(ft) for ft in self.FileTypes):
                     file_path = os.path.join(root, file)
                     try:
-                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                        with open(
+                            file_path, "r", encoding="utf-8", errors="ignore"
+                        ) as f:
                             content = f.read()
                             docs.append({"Path": file_path, "Content": content})
                     except Exception as e:
@@ -110,8 +133,10 @@ class AIAssistant:
 
     def CreateVectorStore(self, docs):
         """Create Chroma vector store for contextual queries."""
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-        splits = text_splitter.create_documents([doc['Content'] for doc in docs])
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000, chunk_overlap=100
+        )
+        splits = text_splitter.create_documents([doc["Content"] for doc in docs])
         self.VectorStore = Chroma.from_documents(splits, embedding=self.Embeddings)
         print("Vector store created successfully.")
 
@@ -123,7 +148,7 @@ class AIAssistant:
             return "No matching documents found."
         print("Creating vector store...")
         self.CreateVectorStore(docs)
-        self.Context = "\n\n".join(doc['Content'] for doc in docs)
+        self.Context = "\n\n".join(doc["Content"] for doc in docs)
         summary = self.GenerateSummary(self.Context)
         self.WriteSummary(summary)
         self.SummaryCompleted = True
@@ -138,19 +163,21 @@ class AIAssistant:
     def AskQuestion(self, query):
         """Ask a question based on the repository context using the vector store."""
         if not self.SummaryCompleted:
-            return "Repository analysis not complete. Please analyze the repository first."
-        
+            return (
+                "Repository analysis not complete. Please analyze the repository first."
+            )
+
         if not self.VectorStore:
             return "No vector store available. Please analyze a repository first."
-        
+
         # Retrieve relevant documents using similarity search
         relevant_docs = self.VectorStore.similarity_search(query, k=5)
         context = "\n\n".join(doc.page_content for doc in relevant_docs)
-        
+
         # Create prompt based on retrieved context
         prompt = self.PromptTemplate.format(Context=context, Question=query)
         response = self.Assistant.invoke(prompt)
-        
+
         return response.content if isinstance(response, AIMessage) else str(response)
 
     def WriteSummary(self, content):
