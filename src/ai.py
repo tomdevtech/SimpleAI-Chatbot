@@ -1,5 +1,5 @@
 """
-This file provides the AI model and its functionalities 
+This file provides the AI model and its functionalities
 for repository code analysis and Q&A.
 
 This module defines the `AIAssistant` class, which facilitates
