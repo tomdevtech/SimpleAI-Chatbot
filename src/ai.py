@@ -45,14 +45,14 @@ class AIAssistant:
         self.FileTypes = (
             FileTypes if FileTypes else [".py", ".js", ".java", ".md", ".txt"]
         )
-        #self.VectorStore = None
+        self.VectorStore = None
         self.Embeddings = OllamaEmbeddings(model="nomic-embed-text")
         self.Assistant = OllamaLLM(
             model=self.ModelName,
             temperature=self.Temperature,
         )
         self.Context = ""
-        #self.SummaryCompleted = False
+        self.SummaryCompleted = False
 
         self.SetTemplates(PromptTemplate, SummaryPromptTemplate)
         self.ManageOllama()
@@ -200,10 +200,10 @@ class AIAssistant:
         Splits = TextSplitter.create_documents(
             [Doc["Content"] for Doc in Docs]
         )
-        # self.VectorStore = Chroma.from_documents(
-        #     Splits,
-        #     embedding=self.Embeddings,
-        # )
+        self.VectorStore = Chroma.from_documents(
+            Splits,
+            embedding=self.Embeddings,
+        )
         print("Vector store created successfully.")
 
     def AnalyzeRepository(self):
@@ -223,7 +223,7 @@ class AIAssistant:
         self.Context = "\n\n".join(Doc["Content"] for Doc in Docs)
         Summary = self.GenerateSummary(self.Context)
         self.WriteSummary(Summary)
-        #self.SummaryCompleted = True
+        self.SummaryCompleted = True
 
         return "Repository analysis complete. You can now ask questions!"
 
@@ -243,39 +243,39 @@ class AIAssistant:
             return Response.content
         return str(Response)
 
-    # def AskQuestion(self, Query):
-    #     """
-    #     Ask a contextual question based on the repository content.
+    def AskQuestion(self, Query):
+        """
+        Ask a contextual question based on the repository content.
 
-    #     Args:
-    #         Query (str): The question to ask.
+        Args:
+            Query (str): The question to ask.
 
-    #     Returns:
-    #         str: The AI-generated response to the question.
-    #     """
-    #     if not self.SummaryCompleted:
-    #         return (
-    #             "Repository analysis not complete. "
-    #             "Please analyze the repository first."
-    #         )
+        Returns:
+            str: The AI-generated response to the question.
+        """
+        if not self.SummaryCompleted:
+            return (
+                "Repository analysis not complete. "
+                "Please analyze the repository first."
+            )
 
-    #     if not self.VectorStore:
-    #         return (
-    #             "No vector store available. "
-    #             "Please analyze a repository first."
-    #         )
+        if not self.VectorStore:
+            return (
+                "No vector store available. "
+                "Please analyze a repository first."
+            )
 
-    #     # Retrieve relevant documents using similarity search
-    #     RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
-    #     Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
+        # Retrieve relevant documents using similarity search
+        RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
+        Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
 
-    #     # Create prompt based on retrieved context
-    #     Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
-    #     Response = self.Assistant.invoke(Prompt)
+        # Create prompt based on retrieved context
+        Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
+        Response = self.Assistant.invoke(Prompt)
 
-    #     if isinstance(Response, AIMessage):
-    #         return Response.content
-    #     return str(Response)
+        if isinstance(Response, AIMessage):
+            return Response.content
+        return str(Response)
 
     def WriteSummary(self, Content):
         """
