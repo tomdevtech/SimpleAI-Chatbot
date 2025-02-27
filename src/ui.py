@@ -32,12 +32,12 @@ class StreamlitUI:
                 st.write(result)
 
         # User Input
-        UserInput = st.text_input("Your question:")
-        if st.button("Send Question"):
-            if UserInput:
-                Response = self.AIAssistant.AskQuestion(UserInput)
-                self.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
-                st.write(Response)
+        # UserInput = st.text_input("Your question:")
+        # if st.button("Send Question"):
+        #     if UserInput:
+        #         Response = self.AIAssistant.AskQuestion(UserInput)
+        #         self.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
+        #         st.write(Response)
 
         # Show Conversation History
-        st.text_area("Chat History", self.ChatHistory, height=300)
+        # st.text_area("Chat History", self.ChatHistory, height=300)
