@@ -45,14 +45,14 @@ class AIAssistant:
         self.FileTypes = (
             FileTypes if FileTypes else [".py", ".js", ".java", ".md", ".txt"]
         )
-        self.VectorStore = None
+        #self.VectorStore = None
         self.Embeddings = OllamaEmbeddings(model="nomic-embed-text")
         self.Assistant = OllamaLLM(
             model=self.ModelName,
             temperature=self.Temperature,
         )
         self.Context = ""
-        self.SummaryCompleted = False
+        #self.SummaryCompleted = False
 
         self.SetTemplates(PromptTemplate, SummaryPromptTemplate)
         self.ManageOllama()
@@ -200,10 +200,10 @@ class AIAssistant:
         Splits = TextSplitter.create_documents(
             [Doc["Content"] for Doc in Docs]
         )
-        self.VectorStore = Chroma.from_documents(
-            Splits,
-            embedding=self.Embeddings,
-        )
+        # self.VectorStore = Chroma.from_documents(
+        #     Splits,
+        #     embedding=self.Embeddings,
+        # )
         print("Vector store created successfully.")
 
     def AnalyzeRepository(self):
@@ -223,7 +223,7 @@ class AIAssistant:
         self.Context = "\n\n".join(Doc["Content"] for Doc in Docs)
         Summary = self.GenerateSummary(self.Context)
         self.WriteSummary(Summary)
-        self.SummaryCompleted = True
+        #self.SummaryCompleted = True
 
         return "Repository analysis complete. You can now ask questions!"
 
