@@ -243,39 +243,39 @@ class AIAssistant:
             return Response.content
         return str(Response)
 
-    def AskQuestion(self, Query):
-        """
-        Ask a contextual question based on the repository content.
+    # def AskQuestion(self, Query):
+    #     """
+    #     Ask a contextual question based on the repository content.
 
-        Args:
-            Query (str): The question to ask.
+    #     Args:
+    #         Query (str): The question to ask.
 
-        Returns:
-            str: The AI-generated response to the question.
-        """
-        if not self.SummaryCompleted:
-            return (
-                "Repository analysis not complete. "
-                "Please analyze the repository first."
-            )
+    #     Returns:
+    #         str: The AI-generated response to the question.
+    #     """
+    #     if not self.SummaryCompleted:
+    #         return (
+    #             "Repository analysis not complete. "
+    #             "Please analyze the repository first."
+    #         )
 
-        if not self.VectorStore:
-            return (
-                "No vector store available. "
-                "Please analyze a repository first."
-            )
+    #     if not self.VectorStore:
+    #         return (
+    #             "No vector store available. "
+    #             "Please analyze a repository first."
+    #         )
 
-        # Retrieve relevant documents using similarity search
-        RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
-        Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
+    #     # Retrieve relevant documents using similarity search
+    #     RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
+    #     Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
 
-        # Create prompt based on retrieved context
-        Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
-        Response = self.Assistant.invoke(Prompt)
+    #     # Create prompt based on retrieved context
+    #     Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
+    #     Response = self.Assistant.invoke(Prompt)
 
-        if isinstance(Response, AIMessage):
-            return Response.content
-        return str(Response)
+    #     if isinstance(Response, AIMessage):
+    #         return Response.content
+    #     return str(Response)
 
     def WriteSummary(self, Content):
         """
