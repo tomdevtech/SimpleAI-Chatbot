@@ -55,7 +55,6 @@ class AIAssistant:
         self.SummaryCompleted = False
 
         self.SetTemplates(PromptTemplate, SummaryPromptTemplate)
-        self.ManageOllama()
 
     def SetTemplates(self, PromptTemplate, SummaryPromptTemplate):
         """
@@ -101,7 +100,7 @@ class AIAssistant:
         """
         self.RepoPath = Path
 
-    @unittest.skip("Not needed for test.")
+    #@unittest.skip("Not needed for test.")
     def ManageOllama(self):
         """
         Manage Ollama server and model availability.
@@ -110,10 +109,6 @@ class AIAssistant:
         is available. If the server is not running, it attempts to start it.
         If the model is not available, it downloads the specified model.
         """
-        OllamaPath = shutil.which("ollama")
-        if not OllamaPath:
-            print("Ollama executable not found. Please install Ollama.")
-            exit(1)
 
         # Check if Ollama server is running
         try:
@@ -126,9 +121,13 @@ class AIAssistant:
             print("Ollama server not running. Attempting to start...")
             try:
                 subprocess.Popen(
-                    [OllamaPath, "serve"],
+                    ["ollama", "serve"],
                     stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL
+                    stderr=subprocess.DEVNULL,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8"
                 )  # nosec
                 print("Ollama server started successfully.")
             except Exception as E:
@@ -138,17 +137,21 @@ class AIAssistant:
         # Check if the specified model exists and pull if necessary
         try:
             Result = subprocess.run(
-                [OllamaPath, "list"],
+                ["ollama", "list"],
+                shell=True,
                 capture_output=True,
-                text=True
+                text=True,
+                encoding="utf-8"
             )  # nosec
 
             if self.ModelName not in Result.stdout:
                 print(f"Model '{self.ModelName}' not found. Downloading...")
                 subprocess.run(
-                    [OllamaPath, "pull", self.ModelName],
+                    ["ollama", "pull", self.ModelName],
+                    shell=True,
                     capture_output=True,
-                    text=True
+                    text=True,
+                    encoding="utf-8"
                 )  # nosec
                 print(f"Model '{self.ModelName}' downloaded successfully.")
             else:
