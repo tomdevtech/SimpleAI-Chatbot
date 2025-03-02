@@ -294,7 +294,7 @@ class AIAssistant:
 
             # Create prompt based on retrieved context
             Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
-            Prompt = self.PromptTemplate.format(Context=Context, 
+            Prompt = self.PromptTemplate.format(Context=Context,
                                                 Question=Query)
             Response = self.Assistant.invoke(Prompt)
 
