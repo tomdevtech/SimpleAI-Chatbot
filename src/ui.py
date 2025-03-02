@@ -1,20 +1,22 @@
 """This file provides the UI for the AI model."""
 
-from ai import AIAssistant
 import streamlit as st
+from ai import AIAssistant
 
 
 class StreamlitUI:
     """Class for managing the Streamlit user interface."""
 
-    def __init__(self, AIAssistant: AIAssistant):
+    def __init__(self):
         """Initialize Process."""
-        self.AIAssistant = AIAssistant
-        self.ChatHistory = ""
-        self.RepoPath = ""
+        if "ChatHistory" not in st.session_state:
+            st.session_state.ChatHistory = ""
+        if "RepoPath" not in st.session_state:
+            st.session_state.RepoPath = ""
 
     def Run(self):
         """Run the Streamlit UI."""
+        st.set_page_config("AI Assistant")
         st.title("AI Assistant")
         st.write(
             """Welcome to the AI Repo Summarizer!\n
@@ -22,22 +24,21 @@ class StreamlitUI:
         )
 
         # Path Input
-        self.RepoPath = st.text_input("Set Repository Path:", self.RepoPath)
+        st.session_state.RepoPath = st.text_input("Set Repository Path:", st.session_state.RepoPath)
         if st.button("Set Path"):
-            if self.RepoPath:
-                st.write(f"Repository path set to: {self.RepoPath}")
-                self.AIAssistant.SetRepoPath(self.ChatHistory)
+            if st.session_state.RepoPath:
+                st.write(f"Repository path set to: {st.session_state.RepoPath}")
+                st.session_state.AI_Assistant.SetRepoPath(st.session_state.RepoPath)
                 st.write("Analyzing repository...")
-                result = self.AIAssistant.AnalyzeRepository()
+                result = st.session_state.AI_Assistant.AnalyzeRepository()
                 st.write(result)
 
         # User Input
         UserInput = st.text_input("Your question:")
         if st.button("Send Question"):
             if UserInput:
-                Response = self.AIAssistant.AskQuestion(UserInput)
-                self.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
-                st.write(Response)
+                Response = st.session_state.AI_Assistant.AskQuestion(UserInput)
+                st.session_state.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
 
         # Show Conversation History
-        st.text_area("Chat History", self.ChatHistory, height=300)
+        st.text_area("Chat History", st.session_state.ChatHistory, height=300)

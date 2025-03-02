@@ -100,41 +100,8 @@ class AIAssistant:
         """
         self.RepoPath = Path
 
-    #@unittest.skip("Not needed for test.")
-    def ManageOllama(self):
-        """
-        Manage Ollama server and model availability.
-
-        Ensures the Ollama server is running and the required model
-        is available. If the server is not running, it attempts to start it.
-        If the model is not available, it downloads the specified model.
-        """
-
-        # Check if Ollama server is running
-        try:
-            Response = requests.get("http://localhost:11434/health", timeout=5)
-            if Response.status_code == 200:
-                print("Ollama server is running.")
-            else:
-                raise requests.exceptions.ConnectionError
-        except requests.exceptions.ConnectionError:
-            print("Ollama server not running. Attempting to start...")
-            try:
-                subprocess.Popen(
-                    ["ollama", "serve"],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8"
-                )  # nosec
-                print("Ollama server started successfully.")
-            except Exception as E:
-                print(f"Failed to start Ollama server: {E}")
-                exit(1)
-
-        # Check if the specified model exists and pull if necessary
+    def CheckIfModelAvailability(self):
+        """Check if the specified model exists and pull if necessary."""
         try:
             Result = subprocess.run(
                 ["ollama", "list"],
@@ -159,6 +126,50 @@ class AIAssistant:
         except Exception as E:
             print(f"Failed to check/download model '{self.ModelName}': {E}")
             exit(1)
+
+    def CheckModelStatus(self):
+        """Check if Ollama server is running."""
+        try:
+            Response = requests.get("http://localhost:11434/health", timeout=5)
+            if Response.status_code == 200:
+                print("Ollama server is running.")
+            else:
+                raise requests.exceptions.ConnectionError
+        except requests.exceptions.ConnectionError:
+            print("Ollama server not running. Attempting to start...")
+            try:
+                subprocess.Popen(
+                    ["ollama", "stop"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    shell=True,
+                    text=True,
+                    encoding="utf-8"
+                )  # nosec
+                subprocess.Popen(
+                    ["ollama", "serve"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    shell=True,
+                    text=True,
+                    encoding="utf-8"
+                )  # nosec
+                print("Ollama server started successfully.")
+            except Exception as E:
+                print(f"Failed to start Ollama server: {E}")
+                exit(1)
+
+    #@unittest.skip("Not needed for test.")
+    def ManageOllama(self):
+        """
+        Manage Ollama server and model availability.
+
+        Ensures the Ollama server is running and the required model
+        is available. If the server is not running, it attempts to start it.
+        If the model is not available, it downloads the specified model.
+        """
+        self.CheckIfModelAvailability()
+        self.CheckModelStatus()
 
     def LoadDocuments(self):
         """
@@ -203,9 +214,16 @@ class AIAssistant:
         Splits = TextSplitter.create_documents(
             [Doc["Content"] for Doc in Docs]
         )
+
+        # Falls Chroma beschädigt ist, löschen und neu erstellen
+        ChromaPath = "chromadb_store"
+        if os.path.exists(ChromaPath):
+            shutil.rmtree(ChromaPath)  # Löscht die bestehende Datenbank
+
         self.VectorStore = Chroma.from_documents(
             Splits,
             embedding=self.Embeddings,
+            persist_directory=ChromaPath  # Persistenz aktivieren
         )
         print("Vector store created successfully.")
 
@@ -262,23 +280,29 @@ class AIAssistant:
                 "Please analyze the repository first."
             )
 
-        if not self.VectorStore:
+        if self.VectorStore is None:
             return (
                 "No vector store available. "
                 "Please analyze a repository first."
             )
 
-        # Retrieve relevant documents using similarity search
-        RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
-        Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
+        try:
+            # Retrieve relevant documents using similarity search
+            RelevantDocs = self.VectorStore.similarity_search(Query, k=5)
+            if not RelevantDocs:
+                return "No relevant documents found for the query."
 
-        # Create prompt based on retrieved context
-        Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
-        Response = self.Assistant.invoke(Prompt)
+            # Create prompt based on retrieved context
+            Context = "\n\n".join(Doc.page_content for Doc in RelevantDocs)
+            Prompt = self.PromptTemplate.format(Context=Context, Question=Query)
+            Response = self.Assistant.invoke(Prompt)
 
-        if isinstance(Response, AIMessage):
-            return Response.content
-        return str(Response)
+            if isinstance(Response, AIMessage):
+                return Response.content
+            return str(Response)
+
+        except Exception as E:
+            return f"Error during query processing: {E}"
 
     def WriteSummary(self, Content):
         """
