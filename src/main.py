@@ -26,7 +26,6 @@ class MainApp:
             st.session_state.AI_Assistant.ManageOllama()
             print("Starting AI...")
 
-        self.ai_assistant = st.session_state.AI_Assistant
         self.ui = StreamlitUI()
 
     def Run(self):
