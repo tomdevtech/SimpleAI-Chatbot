@@ -1,7 +1,6 @@
 """This file runs the tests for the UI."""
 
 import pytest
-from src.ai import AIAssistant
 from src.ui import StreamlitUI
 
 
@@ -14,7 +13,7 @@ class TestUI:
         """ expected_UI""",
         [
             (
-                True,
+                True
             ),
         ],
     )
