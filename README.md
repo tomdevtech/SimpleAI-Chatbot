@@ -1,8 +1,4 @@
 # SimpleAI-Chatbot
-## News
-- Added basic pipelines for code secrurity checks.
-> This project will be updated as continuously as possible.
-
 ## Summary
 
 This AI-Bot is meant to be a very helpful companion and wants to help in many ways to make your daily developer life more easy. One of the greatest advantages of his abilities, is to plan your projects with you.
@@ -18,6 +14,7 @@ timeline
     V0.4 : Added adaptive context for the ai to adapt for different use cases and increased creativity
     V0.5 : Main = Added basic web UI for interaction with the AI model (Streamlit)
          : Gradio = Added basic web UI for interaction with the AI model (Gradio)
-    V0.6 : First test version of RAG will be included into the repo, but is still not connected to the AI model. 
+    V0.6 : First test version of RAG will be included into the repo, but is still not connected to the AI model
     V1.0 : Includes RAG and automatic documentation creation for your repo & ask questions about the content
-    In Development : Updating the system for not resetting the processes each time (UI probblem)
+    V1.1 : Updated the system for not resetting the processes each time (UI probblem)
+         : Q&A with the AI model is working now
