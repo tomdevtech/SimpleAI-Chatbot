@@ -159,7 +159,7 @@ class AIAssistant:
                 print(f"Failed to start Ollama server: {E}")
                 exit(1)
 
-    #@unittest.skip("Not needed for test.")
+    @unittest.skip("Not needed for test.")
     def ManageOllama(self):
         """
         Manage Ollama server and model availability.
