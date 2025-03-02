@@ -40,7 +40,7 @@ class StreamlitUI:
         if st.button("Send Question"):
             if UserInput:
                 Response = st.session_state.AI_Assistant.AskQuestion(UserInput)
-                st.session_state.ChatHistory += f"""User: 
+                st.session_state.ChatHistory += f"""User:
                 {UserInput}\nAI: {Response}\n\n"""
 
         # Show Conversation History
