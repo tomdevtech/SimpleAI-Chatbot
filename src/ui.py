@@ -1,7 +1,6 @@
 """This file provides the UI for the AI model."""
 
 import streamlit as st
-from ai import AIAssistant
 
 
 class StreamlitUI:
@@ -24,7 +23,8 @@ class StreamlitUI:
         )
 
         # Path Input
-        st.session_state.RepoPath = st.text_input("Set Repository Path:", st.session_state.RepoPath)
+        st.session_state.RepoPath = st.text_input("Set Repository Path:", 
+                                                  st.session_state.RepoPath)
         if st.button("Set Path"):
             if st.session_state.RepoPath:
                 st.write(f"Repository path set to: {st.session_state.RepoPath}")
