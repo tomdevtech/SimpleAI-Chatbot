@@ -27,7 +27,7 @@ class StreamlitUI:
                                                   st.session_state.RepoPath)
         if st.button("Set Path"):
             if st.session_state.RepoPath:
-                st.write(f"""Repository path set to: 
+                st.write(f"""Repository path set to:
                          {st.session_state.RepoPath}""")
                 st.session_state.AI_Assistant.SetRepoPath(
                     st.session_state.RepoPath)
@@ -40,7 +40,8 @@ class StreamlitUI:
         if st.button("Send Question"):
             if UserInput:
                 Response = st.session_state.AI_Assistant.AskQuestion(UserInput)
-                st.session_state.ChatHistory += f"User: {UserInput}\nAI: {Response}\n\n"
+                st.session_state.ChatHistory += f"""User: 
+                {UserInput}\nAI: {Response}\n\n"""
 
         # Show Conversation History
         st.text_area("Chat History", st.session_state.ChatHistory, height=300)
