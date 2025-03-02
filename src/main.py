@@ -1,5 +1,6 @@
 """This file runs the AI model and lets you interact with it."""
 
+import streamlit as st
 from ai import AIAssistant
 from ui import StreamlitUI
 
@@ -15,19 +16,26 @@ class MainApp:
         summary_prompt_template
     ):
         """Initialize the application."""
-        self.ai_assistant = AIAssistant(
-            model_name,
-            creativity,
-            prompt_template,
-            summary_prompt_template
-        )
-        self.ui = StreamlitUI(self.ai_assistant)
+        if "AI_Assistant" not in st.session_state:
+            st.session_state.AI_Assistant = AIAssistant(
+                model_name,
+                creativity,
+                prompt_template,
+                summary_prompt_template
+            )
+            st.session_state.AI_Assistant.ManageOllama()
+            print("Starting AI...")
 
-    def run(self):
+        self.ui = StreamlitUI()
+
+    def Run(self):
         """Run the application."""
         self.ui.Run()
+        print("Starting UI...")
 
 
 if __name__ == "__main__":
-    app = MainApp("llama3.1:8b", 1.0, "", "")
-    app.run()
+    if "MainApp" not in st.session_state:
+        st.session_state.MainApp = MainApp("llama3.1:8b", 1.0, "", "")
+
+    st.session_state.MainApp.Run()
