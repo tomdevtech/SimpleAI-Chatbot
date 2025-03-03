@@ -64,7 +64,9 @@ streamlit run YourDirectory/src/main.py
 ---
 
 ## **📚 References & Further Reading**  
-- 📖 [Markdown Syntax Guide](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting)  
+- 📖 [Markdown Syntax Guide](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting)
+- 📖 [About READMEs – GitHub Docs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes#about-readmes)  
+- ⚙️ [CI/CD Pipelines – Overview](https://www.atlassian.com/continuous-delivery/ci-vs-ci-vs-cd)  
 - 💡 [Ollama Documentation](https://ollama.com/docs)  
 - 🧠 [LangChain Docs](https://python.langchain.com/)  
 
